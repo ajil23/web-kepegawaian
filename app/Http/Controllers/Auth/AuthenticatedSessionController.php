@@ -27,20 +27,15 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-        
-        if (auth()->user()->role === 'admin') {
-            return redirect('/admin');
-        }
 
-        if (auth()->user()->role === 'pegawai') {
-            return redirect('/pegawai');
-        }
+        $user = auth()->user();
 
-        if (auth()->user()->role === 'kph') {
-            return redirect('/kph');
-        }
-
-        return redirect()->intended(route('dashboard', absolute: false));
+        return match ($user->role) {
+            'admin'   => redirect()->route('admin.dashboard'),
+            'pegawai' => redirect()->route('pegawai.dashboard'),
+            'kph'     => redirect()->route('kph.dashboard'),
+            default   => redirect('/'),
+        };
     }
 
     /**
@@ -54,6 +49,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('login');
     }
 }
