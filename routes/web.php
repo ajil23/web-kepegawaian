@@ -22,8 +22,14 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::delete('/golongan/{id}', [GolonganController::class, 'delete'])->name('delete.golongan');
 
     Route::get('/jabatan', [JabatanController::class, 'index'])->name('index.jabatan');
+    Route::post('/jabatan', [JabatanController::class, 'store'])->name('store.jabatan');
+    Route::put('/jabatan/{id}', [JabatanController::class, 'update'])->name('update.jabatan');
+    Route::delete('/jabatan/{id}', [JabatanController::class, 'delete'])->name('delete.jabatan');
 
     Route::get('/unitkerja', [UnitKerjaController::class, 'index'])->name('index.unitkerja');
+    Route::post('/unitkerja', [UnitKerjaController::class, 'store'])->name('store.unitkerja');
+    Route::put('/unitkerja/{id}', [UnitKerjaController::class, 'update'])->name('update.unitkerja');
+    Route::delete('/unitkerja/{id}', [UnitKerjaController::class, 'delete'])->name('delete.unitkerja');
 });
 
 Route::middleware(['auth', 'role:pegawai'])->prefix('pegawai')->name('pegawai.')->group(function () {
