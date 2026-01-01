@@ -101,12 +101,12 @@
                     <label class="text-sm font-medium">Nama Unit Kerja</label>
                     <input type="text" name="nama_unitkerja"
                         value="{{ old('nama_unitkerja') }}"
-                        class="w-full mt-1 px-4 py-2 border rounded-lg">
+                        class="w-full mt-1 px-4 py-2 border rounded-lg" required>
                 </div>
 
                 <div>
                     <label class="text-sm font-medium">Status</label>
-                    <select name="aktif" class="w-full mt-1 px-4 py-2 border rounded-lg">
+                    <select name="aktif" class="w-full mt-1 px-4 py-2 border rounded-lg" required>
                         <option value="">-- Pilih Status --</option>
                         <option value="aktif">Aktif</option>
                         <option value="nonaktif">Tidak Aktif</option>

@@ -107,7 +107,7 @@
                         class="w-full mt-1 px-4 py-2 rounded-lg border
                         {{ $errors->has('nama_golongan')
                             ? 'border-red-500 focus:ring-red-500'
-                            : 'border-slate-200 focus:ring-green-600' }}">
+                            : 'border-slate-200 focus:ring-green-600' }}" required>
 
                     @error('nama_golongan')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -124,7 +124,7 @@
                         class="w-full mt-1 px-4 py-2 rounded-lg border
                         {{ $errors->has('aktif')
                             ? 'border-red-500 focus:ring-red-500'
-                            : 'border-slate-200 focus:ring-green-600' }}">
+                            : 'border-slate-200 focus:ring-green-600' }}" required>
                         <option value="">-- Pilih Status --</option>
                         <option value="aktif" {{ old('aktif') == 'aktif' ? 'selected' : '' }}>Aktif</option>
                         <option value="nonaktif" {{ old('aktif') == 'nonaktif' ? 'selected' : '' }}>Tidak Aktif</option>
