@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Template Dashboard Reusable</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         /* Custom scrollbar untuk sidebar */
         .custom-scrollbar::-webkit-scrollbar {
@@ -78,13 +79,13 @@
                         @csrf
                     </form>
                     <button type="button"
-                            onclick="document.getElementById('logout-form').submit()"
-                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+                        onclick="document.getElementById('logout-form').submit()"
+                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
                         Logout
                     </button>
                     <button type="button"
-                            onclick="hideLogoutModal()"
-                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        onclick="hideLogoutModal()"
+                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                         Cancel
                     </button>
                 </div>
@@ -114,6 +115,14 @@
             document.getElementById('logout-modal').classList.add('hidden');
             document.getElementById('logout-modal').style.display = 'none';
             document.body.style.overflow = ''; // Re-enable scrolling
+        }
+
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            const arrow = document.getElementById('ref-arrow');
+
+            dropdown.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-180');
         }
     </script>
 </body>

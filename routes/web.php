@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\Admin\GolonganController;
+use App\Http\Controllers\Admin\JabatanController;
+use App\Http\Controllers\Admin\UnitKerjaController;
 use App\Http\Controllers\Pegawai\DashboardController as PegawaiDashboard;
 use App\Http\Controllers\KPH\DashboardController as KphDashboard;
 use App\Http\Controllers\ProfileController;
@@ -12,6 +15,12 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
+
+    Route::get('/golongan', [GolonganController::class, 'index'])->name('index.golongan');
+
+    Route::get('/jabatan', [JabatanController::class, 'index'])->name('index.jabatan');
+
+    Route::get('/unitkerja', [UnitKerjaController::class, 'index'])->name('index.unitkerja');
 });
 
 Route::middleware(['auth', 'role:pegawai'])->prefix('pegawai')->name('pegawai.')->group(function () {
