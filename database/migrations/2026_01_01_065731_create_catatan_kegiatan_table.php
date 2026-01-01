@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('pegawai_id');
             $table->foreign('pegawai_id')->references('id')->on('pegawai')->onDelete('cascade')->onUpdate('cascade');
-            $table->month('periode_bulan');
+            $table->unsignedTinyInteger('periode_bulan');
             $table->year('periode_tahun');
             $table->text('judul');
             $table->text('deskripsi');
