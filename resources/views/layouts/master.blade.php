@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Template Dashboard Reusable</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         /* Custom scrollbar untuk sidebar */
         .custom-scrollbar::-webkit-scrollbar {
@@ -126,6 +125,24 @@
             arrow.classList.toggle('rotate-180');
         }
     </script>
+
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdown-menu');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // tutup dropdown saat klik di luar
+        document.addEventListener('click', function(e) {
+            const profile = document.getElementById('user-profile');
+            const dropdown = document.getElementById('dropdown-menu');
+
+            if (!profile.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+    </script>
+
 </body>
 
 </html>

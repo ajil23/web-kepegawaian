@@ -101,7 +101,7 @@
                     <label class="text-sm font-medium">Nama Jabatan</label>
                     <input type="text" name="nama_jabatan" value="{{ old('nama_jabatan') }}"
                         class="w-full mt-1 px-4 py-2 rounded-lg border
-                        {{ $errors->has('nama_jabatan') ? 'border-red-500' : 'border-slate-200' }}">
+                        {{ $errors->has('nama_jabatan') ? 'border-red-500' : 'border-slate-200' }}" required>
                     @error('nama_jabatan')
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror
@@ -111,7 +111,7 @@
                     <label class="text-sm font-medium">Status</label>
                     <select name="aktif"
                         class="w-full mt-1 px-4 py-2 rounded-lg border
-                        {{ $errors->has('aktif') ? 'border-red-500' : 'border-slate-200' }}">
+                        {{ $errors->has('aktif') ? 'border-red-500' : 'border-slate-200' }}" required>
                         <option value="">-- Pilih Status --</option>
                         <option value="aktif">Aktif</option>
                         <option value="nonaktif">Tidak Aktif</option>
