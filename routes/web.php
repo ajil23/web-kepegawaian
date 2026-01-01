@@ -17,6 +17,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
 
     Route::get('/golongan', [GolonganController::class, 'index'])->name('index.golongan');
+    Route::post('/golongan', [GolonganController::class, 'store'])->name('store.golongan');
+    Route::put('/golongan/{id}', [GolonganController::class, 'update'])->name('update.golongan');
+    Route::delete('/golongan/{id}', [GolonganController::class, 'delete'])->name('delete.golongan');
 
     Route::get('/jabatan', [JabatanController::class, 'index'])->name('index.jabatan');
 
