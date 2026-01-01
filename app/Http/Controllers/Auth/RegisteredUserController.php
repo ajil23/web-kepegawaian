@@ -31,21 +31,29 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'nip' => ['required', 'string', 'max:25'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
             'name' => $request->name,
+            'nip' => $request->nip,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'pegawai'
+            'role' => 'pegawai',
+            'status_akun' => 'nonaktif',
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return match ($user->role) {
+            'admin'   => redirect()->route('admin.dashboard'),
+            'pegawai' => redirect()->route('pegawai.dashboard'),
+            'kph'     => redirect()->route('kph.dashboard'),
+            default   => redirect('/'),
+        };
     }
 }
