@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             'name' => 'KPH',
             'nip' => '1111111111',
             'role' => 'kph',
-            'status_akun' => 'aktif',
+            'status_akun' => 'nonaktif',
             'email' => 'kph@gmail.com',
             'password' => Hash::make('12341234'),
         ]);
@@ -36,7 +36,7 @@ class UserSeeder extends Seeder
             'name' => 'Pegawai',
             'nip' => '2222222222',
             'role' => 'pegawai',
-            'status_akun' => 'aktif',
+            'status_akun' => 'nonaktif',
             'email' => 'pegawai@gmail.com',
             'password' => Hash::make('12341234'),
         ]); 

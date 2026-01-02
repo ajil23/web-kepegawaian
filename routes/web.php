@@ -17,10 +17,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/register/waiting', function () {
+    return view('auth.register-waiting');
+})->name('register.waiting');
+
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
 
     Route::get('/register', [RegisterController::class, 'index'])->name('register.index');
+    Route::get('/register/create', [RegisterController::class, 'create'])->name('register.create');
+    Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+    Route::get('/register/{user}/edit', [RegisterController::class, 'edit'])->name('register.edit');
+    Route::put('/register/{user}', [RegisterController::class, 'update'])->name('register.update');
+    Route::delete('/register/{user}', [RegisterController::class, 'delete'])->name('register.delete');
 
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
 

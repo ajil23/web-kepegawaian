@@ -17,6 +17,7 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
+
     public function create(): View
     {
         return view('auth.register');
@@ -27,6 +28,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
+    
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
@@ -42,18 +44,11 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'pegawai',
-            'status_akun' => 'nonaktif',
+            'status_akun' => 'nonaktif', 
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user);
-
-        return match ($user->role) {
-            'admin'   => redirect()->route('admin.dashboard'),
-            'pegawai' => redirect()->route('pegawai.dashboard'),
-            'kph'     => redirect()->route('kph.dashboard'),
-            default   => redirect('/'),
-        };
+        return redirect()->route('register.waiting');
     }
 }
