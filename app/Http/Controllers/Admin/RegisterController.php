@@ -108,14 +108,17 @@ class RegisterController extends Controller
     {
         $pegawai = Pegawai::where('user_id', $user->id)->first();
 
+        // Ensure these queries return collections
+        $unitkerja = UnitKerja::where('aktif', 'aktif')->orderBy('nama_unitkerja')->get();
+        $golongan = Golongan::where('aktif', 'aktif')->orderBy('nama_golongan')->get();
+        $jabatan = Jabatan::where('aktif', 'aktif')->orderBy('nama_jabatan')->get();
+
         return view('pages.admin.register.edit', [
             'user'      => $user,
             'pegawai'   => $pegawai,
-
-            // dropdown hanya aktif
-            'unitkerja' => UnitKerja::where('aktif', 'aktif')->orderBy('nama_unitkerja')->get(),
-            'golongan'  => Golongan::where('aktif', 'aktif')->orderBy('nama_golongan')->get(),
-            'jabatan'   => Jabatan::where('aktif', 'aktif')->orderBy('nama_jabatan')->get(),
+            'unitkerja' => $unitkerja,
+            'golongan'  => $golongan,
+            'jabatan'   => $jabatan,
         ]);
     }
 
@@ -124,7 +127,7 @@ class RegisterController extends Controller
         $request->validate([
             // users
             'name'   => 'required|string|max:255',
-            'nip'    => 'required|string|max:30|unique:users,nip|regex:/^\d+$/', $user->id,
+            'nip'    => 'required|string|max:30|unique:users,nip,' . $user->id . '|regex:/^\d+$/',
             'email'  => 'required|email|unique:users,email,' . $user->id,
             'role'   => 'required|in:admin,pegawai,kph',
             'status_akun' => 'required|in:aktif,nonaktif',
