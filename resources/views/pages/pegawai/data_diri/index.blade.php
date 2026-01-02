@@ -60,6 +60,7 @@ $isEmpty = !$dataDiri;
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">No HP</label>
                     <input type="text" name="no_hp"
+                        oninput="this.value = this.value.replace(/\D/g,'')"
                         value="{{ old('no_hp', $dataDiri->no_hp ?? '') }}"
                         readonly
                         class="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-slate-50 text-sm">
