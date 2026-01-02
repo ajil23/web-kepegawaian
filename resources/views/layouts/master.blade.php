@@ -103,45 +103,48 @@
             overlay.classList.toggle('hidden');
         }
 
-        // Show logout modal
-        function openLogoutModal() {
-            document.getElementById('logout-modal').classList.remove('hidden');
-            document.getElementById('logout-modal').style.display = 'block';
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
-        }
-
-        // Hide logout modal
-        function hideLogoutModal() {
-            document.getElementById('logout-modal').classList.add('hidden');
-            document.getElementById('logout-modal').style.display = 'none';
-            document.body.style.overflow = ''; // Re-enable scrolling
-        }
-
-        function toggleDropdown(id) {
+        function toggleSidebarDropdown(id, arrowId = null) {
             const dropdown = document.getElementById(id);
-            const arrow = document.getElementById('ref-arrow');
+            const arrow = arrowId ? document.getElementById(arrowId) : null;
+
+            if (!dropdown) return;
 
             dropdown.classList.toggle('hidden');
-            arrow.classList.toggle('rotate-180');
-        }
-    </script>
 
-    <script>
-        function toggleDropdown() {
+            if (arrow) {
+                arrow.classList.toggle('rotate-180');
+            }
+        }
+
+        function toggleProfileDropdown() {
             const dropdown = document.getElementById('dropdown-menu');
             dropdown.classList.toggle('hidden');
         }
 
-        // tutup dropdown saat klik di luar
         document.addEventListener('click', function(e) {
             const profile = document.getElementById('user-profile');
             const dropdown = document.getElementById('dropdown-menu');
 
-            if (!profile.contains(e.target)) {
+            if (profile && dropdown && !profile.contains(e.target)) {
                 dropdown.classList.add('hidden');
             }
         });
+
+        function openLogoutModal() {
+            const modal = document.getElementById('logout-modal');
+            modal.classList.remove('hidden');
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideLogoutModal() {
+            const modal = document.getElementById('logout-modal');
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
     </script>
+
 
 
 </body>

@@ -34,7 +34,7 @@
         {{-- USER DROPDOWN --}}
         <div class="relative" id="user-profile">
             <button type="button"
-                onclick="toggleDropdown()"
+                onclick="toggleProfileDropdown()"
                 class="flex items-center gap-2 hover:bg-gray-50 p-1 rounded-lg">
 
                 <div class="hidden md:block text-right">
