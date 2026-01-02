@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\RegisterController;
 use App\Http\Controllers\Admin\RiwayatKepegawaianController;
 use App\Http\Controllers\Pegawai\DashboardController as PegawaiDashboard;
 use App\Http\Controllers\KPH\DashboardController as KphDashboard;
+use App\Http\Controllers\Pegawai\DataDiriController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -55,6 +56,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 Route::middleware(['auth', 'role:pegawai'])->prefix('pegawai')->name('pegawai.')->group(function () {
     Route::get('/dashboard', [PegawaiDashboard::class, 'index'])->name('dashboard');
+
+    Route::get('/data-diri', [DataDiriController::class, 'index'])->name('data_diri.index');
+    Route::post('/data-diri', [DataDiriController::class, 'store'])->name('data_diri.store');
+    Route::put('/data-diri', [DataDiriController::class, 'update'])->name('data_diri.update');
 });
 
 Route::middleware(['auth', 'role:kph'])->prefix('kph')->name('kph.')->group(function () {

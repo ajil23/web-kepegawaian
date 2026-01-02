@@ -14,7 +14,7 @@ class DataDiri extends Model
     protected $fillable = [
         'no_hp',
         'alamat',
-        'tempat_lahit',
+        'tempat_lahir',
         'tgl_lahir',
         'jenis_kelamin',
         'foto',

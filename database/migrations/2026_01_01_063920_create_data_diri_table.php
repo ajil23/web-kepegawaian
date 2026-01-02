@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('no_hp');
             $table->string('alamat');
-            $table->string('tempat_lahit');
+            $table->string('tempat_lahir');
             $table->date('tgl_lahir');
             $table->enum('jenis_kelamin', ['L', 'P']);
             $table->string('foto');
