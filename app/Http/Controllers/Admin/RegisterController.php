@@ -161,7 +161,6 @@ class RegisterController extends Controller
                     'golongan_id' => $request->golongan_id,
                     'jabatan_id' => $request->jabatan_id,
                     'status_pegawai' => $request->status_pegawai,
-                    'data_diri_id' => null,
                 ]
             );
 
