@@ -24,10 +24,10 @@
 
                 <div>
                     <label class="text-sm font-semibold text-slate-700">NIP</label>
-                    <input name="nip" value="{{ old('nip') }}" required
-                        class="w-full mt-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-600 outline-none text-sm">
+                    <input name="nip" value="{{ old('nip') }}" required pattern="\d*" oninput="this.value = this.value.replace(/\D/g,'')" class="w-full mt-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-600 outline-none text-sm">
                     <x-input-error :messages="$errors->get('nip')" class="mt-1" />
                 </div>
+
 
                 <div>
                     <label class="text-sm font-semibold text-slate-700">Email</label>

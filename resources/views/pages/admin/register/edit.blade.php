@@ -39,6 +39,8 @@
                 </label>
                 <input type="text" name="nip"
                     value="{{ old('nip', $user->nip) }}" required
+                    pattern="\d*"
+                    oninput="this.value = this.value.replace(/\D/g,'')"
                     class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm">
             </div>
 
