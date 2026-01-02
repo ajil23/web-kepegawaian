@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         'role' => \App\Http\Middleware\RoleMiddleware::class,
     ]);
     })
+    ->withProviders([
+        App\Providers\LogServiceProvider::class,
+    ])
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
