@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedBigInteger('jabatan_id');
             $table->foreign('jabatan_id')->references('id')->on('ref_jabatan')->onDelete('cascade')->onUpdate('cascade');
             $table->string('status_pegawai');
-            $table->unsignedBigInteger('data_diri_id');
+            $table->unsignedBigInteger('data_diri_id')->nullable();
             $table->foreign('data_diri_id')->references('id')->on('data_diri')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });

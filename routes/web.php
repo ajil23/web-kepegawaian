@@ -5,6 +5,9 @@ use App\Http\Controllers\Admin\GolonganController;
 use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\UnitKerjaController;
 use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\Admin\PegawaiController;
+use App\Http\Controllers\Admin\RegisterController;
+use App\Http\Controllers\Admin\RiwayatKepegawaianController;
 use App\Http\Controllers\Pegawai\DashboardController as PegawaiDashboard;
 use App\Http\Controllers\KPH\DashboardController as KphDashboard;
 use App\Http\Controllers\ProfileController;
@@ -16,6 +19,12 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
+
+    Route::get('/register', [RegisterController::class, 'index'])->name('register.index');
+
+    Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+
+    Route::get('/riwayat-kepegawaian', [RiwayatKepegawaianController::class, 'index'])->name('riwayat_kepegawaian.index');
 
     Route::get('/golongan', [GolonganController::class, 'index'])->name('index.golongan');
     Route::post('/golongan', [GolonganController::class, 'store'])->name('store.golongan');

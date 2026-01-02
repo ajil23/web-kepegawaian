@@ -7,7 +7,6 @@
                     d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
         </button>
-        <h1 class="text-lg font-semibold text-gray-800">Dashboard</h1>
     </div>
 
     <div class="flex items-center space-x-4">
