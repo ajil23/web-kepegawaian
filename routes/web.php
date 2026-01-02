@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\GolonganController;
 use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\UnitKerjaController;
+use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Pegawai\DashboardController as PegawaiDashboard;
 use App\Http\Controllers\KPH\DashboardController as KphDashboard;
 use App\Http\Controllers\ProfileController;
@@ -30,6 +31,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/unitkerja', [UnitKerjaController::class, 'store'])->name('store.unitkerja');
     Route::put('/unitkerja/{id}', [UnitKerjaController::class, 'update'])->name('update.unitkerja');
     Route::delete('/unitkerja/{id}', [UnitKerjaController::class, 'delete'])->name('delete.unitkerja');
+
+    Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
 });
 
 Route::middleware(['auth', 'role:pegawai'])->prefix('pegawai')->name('pegawai.')->group(function () {
