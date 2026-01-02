@@ -8,12 +8,19 @@ use App\Models\Jabatan;
 use App\Models\Pegawai;
 use App\Models\UnitKerja;
 use App\Models\User;
+use App\Services\LogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
+    protected $logService;
+
+    public function __construct(LogService $logService)
+    {
+        $this->logService = $logService;
+    }
     public function index()
     {
         $user = User::all();
@@ -74,11 +81,22 @@ class RegisterController extends Controller
 
             DB::commit();
 
+            // Log aktivitas pembuatan user
+            $this->logService->logAction('Membuat user baru', [
+                'name' => $user->name,
+                'role' => $user->role
+            ]);
+
             return redirect()
                 ->route('admin.register.index')
                 ->with('success', 'User & Pegawai berhasil ditambahkan');
         } catch (\Throwable $e) {
             DB::rollBack();
+
+            // Log error jika terjadi kesalahan
+            $this->logService->logAction('Gagal membuat user baru', [
+                'error' => $e->getMessage(),
+            ]);
 
             return back()
                 ->withInput()
@@ -146,11 +164,22 @@ class RegisterController extends Controller
 
             DB::commit();
 
+            // Log aktivitas update user
+            $this->logService->logAction('Memperbarui data user', [
+                'name' => $user->name,
+                'role' => $user->role,
+            ]);
+
             return redirect()
                 ->route('admin.register.index')
                 ->with('success', 'User & Pegawai berhasil diperbarui');
         } catch (\Throwable $e) {
             DB::rollBack();
+
+            // Log error jika terjadi kesalahan
+            $this->logService->logAction('Gagal memperbarui data user', [
+                'error' => $e->getMessage(),
+            ]);
 
             return back()
                 ->withInput()
@@ -160,7 +189,16 @@ class RegisterController extends Controller
 
     public function delete(User $user)
     {
+        // Simpan informasi user sebelum dihapus untuk keperluan logging
+        $userData = [
+            'name' => $user->name,
+            'role' => $user->role
+        ];
+
         $user->delete();
+
+        // Log aktivitas penghapusan user
+        $this->logService->logAction('Menghapus user', $userData);
 
         return redirect()
             ->route('admin.register.index')
