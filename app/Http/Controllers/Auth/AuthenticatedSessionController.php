@@ -26,9 +26,20 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        $request->session()->regenerate();
-
         $user = auth()->user();
+
+        if ($user->status_akun !== 'aktif') {
+            auth()->logout();
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('login')->withErrors([
+                'email' => 'Akun Anda belum diverifikasi atau masih nonaktif. Silakan hubungi admin.',
+            ]);
+        }
+
+        $request->session()->regenerate();
 
         return match ($user->role) {
             'admin'   => redirect()->route('admin.dashboard'),
