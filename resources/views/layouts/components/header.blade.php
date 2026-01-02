@@ -42,9 +42,14 @@
                     <p class="text-[10px] text-gray-500">{{ Auth::user()->email }}</p>
                 </div>
 
-                <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+                <div class="w-8 h-8 rounded-full overflow-hidden border border-gray-300 bg-gray-100 flex items-center justify-center">
+                    @if (Auth::user()->avatar)
+                    <img src="{{ asset('storage/'.Auth::user()->avatar) }}">
+                    @else
                     {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    @endif
                 </div>
+
             </button>
 
             {{-- DROPDOWN MENU --}}
