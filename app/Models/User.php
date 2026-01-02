@@ -53,4 +53,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Pegawai::class);
     }
+
+    public function getAvatarAttribute()
+    {
+        return $this->pegawai?->dataDiri?->foto;
+    }
 }
