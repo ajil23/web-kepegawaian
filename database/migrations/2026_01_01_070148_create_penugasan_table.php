@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('tugas_id');
             $table->foreign('tugas_id')->references('id')->on('tugas')->onDelete('cascade')->onUpdate('cascade');
             $table->string('status');
-            $table->string('catatan_kepegawaian');
+            $table->string('catatan_kepegawaian')->nullable();
             $table->timestamps();
         });
     }
