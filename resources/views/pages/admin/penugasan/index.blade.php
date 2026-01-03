@@ -49,9 +49,26 @@
                         <td class="py-4">
                             {{ \Carbon\Carbon::parse($item->deadline)->format('d-m-Y') }}
                         </td>
-                        <td class="py-4 capitalize">
-                            {{ $item->prioritas }}
+                        <td class="py-4">
+                            @if ($item->prioritas === 'rendah')
+                            <span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
+                                Rendah
+                            </span>
+                            @elseif ($item->prioritas === 'sedang')
+                            <span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-700">
+                                Sedang
+                            </span>
+                            @elseif ($item->prioritas === 'tinggi')
+                            <span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-700">
+                                Tinggi
+                            </span>
+                            @else
+                            <span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600">
+                                -
+                            </span>
+                            @endif
                         </td>
+
                         <td class="py-4">
                             {{ $item->user->name ?? '-' }}
                         </td>
@@ -101,7 +118,6 @@
             <button type="button" onclick="closeDetailModal()">✕</button>
         </div>
         <div class="px-6 py-6" id="detailBody">
-            <!-- Data pegawai akan diisi via JS -->
         </div>
         <div class="px-6 py-4 border-t flex justify-end">
             <button type="button"
@@ -162,29 +178,45 @@
         document.getElementById('detailJudul').innerText = tugas.judul;
 
         let html = `<h4 class="font-semibold text-slate-700 mb-3">Daftar Pegawai</h4>
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="text-slate-500 text-xs uppercase">
-                                <th class="pb-2 text-left">Nama Pegawai</th>
-                                <th class="pb-2 text-left">Status</th>
-                                <th class="pb-2 text-left">Catatan</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="text-slate-500 text-xs uppercase">
+                        <th class="pb-2 text-left">Nama Pegawai</th>
+                        <th class="pb-2 text-left">Status</th>
+                        <th class="pb-2 text-left">Catatan</th>
+                    </tr>
+                </thead>
+                <tbody>`;
 
         if (tugas.penugasan.length > 0) {
             tugas.penugasan.forEach(p => {
+
+                let statusBadge = `<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600"> - </span>`;
+
+                if (p.status === 'baru') {
+                    statusBadge = `<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700"> Baru </span>`;
+                } else if (p.status === 'proses') {
+                    statusBadge = `<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-700">Proses</span>`; 
+                } else if (p.status === 'selesai') {
+                    statusBadge = `<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">Selesai</span>`;
+                }
+
                 html += `<tr>
-                            <td class="py-2">${p.pegawai.user.name ?? '-'}</td>
-                            <td class="py-2 capitalize">${p.status}</td>
-                            <td class="py-2">${p.catatan_kepegawaian ?? '-'}</td>
-                        </tr>`;
+                    <td class="py-2">${p.pegawai?.user?.name ?? '-'}</td>
+                    <td class="py-2">${statusBadge}</td>
+                    <td class="py-2">${p.catatan_kepegawaian ?? '-'}</td>
+                </tr>`;
             });
         } else {
-            html += `<tr><td colspan="3" class="py-3 text-center text-slate-500">Belum ada pegawai</td></tr>`;
+            html += `<tr>
+                <td colspan="3" class="py-3 text-center text-slate-500">
+                    Belum ada pegawai
+                </td>
+            </tr>`;
         }
 
         html += `</tbody></table>`;
+
         document.getElementById('detailBody').innerHTML = html;
 
         modalToggle('modalDetail', true);
