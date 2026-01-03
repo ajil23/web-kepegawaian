@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\UnitKerjaController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\PegawaiController;
+use App\Http\Controllers\Admin\PenugasanController;
 use App\Http\Controllers\Admin\RegisterController;
 use App\Http\Controllers\Admin\RiwayatKepegawaianController;
 use App\Http\Controllers\Pegawai\DashboardController as PegawaiDashboard;
@@ -48,6 +49,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/riwayat-kepegawaian/{riwayat}/edit', [RiwayatKepegawaianController::class, 'edit'])->name('riwayat_kepegawaian.edit');
     Route::put('/riwayat-kepegawaian/{riwayat}', [RiwayatKepegawaianController::class, 'update'])->name('riwayat_kepegawaian.update');
     Route::delete('/riwayat-kepegawaian/{riwayat}', [RiwayatKepegawaianController::class, 'delete'])->name('riwayat_kepegawaian.delete');
+
+    Route::get('/penugasan', [PenugasanController::class, 'index'])->name('penugasan.index');
+    Route::get('/penugasan/create', [PenugasanController::class, 'create'])->name('penugasan.create');
+    Route::post('/penugasan', [PenugasanController::class, 'store'])->name('penugasan.store');
+    Route::get('/penugasan/{penugasan}/edit', [PenugasanController::class, 'edit'])->name('penugasan.edit');
+    Route::put('/penugasan/{penugasan}', [PenugasanController::class, 'update'])->name('penugasan.update');
+    Route::delete('/penugasan/{penugasan}', [PenugasanController::class, 'delete'])->name('penugasan.delete');
 
     Route::get('/golongan', [GolonganController::class, 'index'])->name('index.golongan');
     Route::post('/golongan', [GolonganController::class, 'store'])->name('store.golongan');
