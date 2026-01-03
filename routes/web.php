@@ -12,6 +12,7 @@ use App\Http\Controllers\Pegawai\DashboardController as PegawaiDashboard;
 use App\Http\Controllers\KPH\DashboardController as KphDashboard;
 use App\Http\Controllers\Pegawai\DataDiriController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\KPH\PegawaiController as KphPegawaiController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -74,6 +75,9 @@ Route::middleware(['auth', 'role:pegawai'])->prefix('pegawai')->name('pegawai.')
 
 Route::middleware(['auth', 'role:kph'])->prefix('kph')->name('kph.')->group(function () {
     Route::get('/dashboard', [KphDashboard::class, 'index'])->name('dashboard');
+
+    Route::get('/pegawai', [KphPegawaiController::class, 'index'])->name('pegawai.index');
+    Route::get('/pegawai/{id}', [KphPegawaiController::class, 'show'])->name('pegawai.show');
 });
 
 
