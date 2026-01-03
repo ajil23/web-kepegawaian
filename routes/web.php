@@ -15,7 +15,9 @@ use App\Http\Controllers\Pegawai\DataDiriController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KPH\PegawaiController as KphPegawaiController;
 use App\Http\Controllers\Pegawai\DataKepegawaianController;
-use App\Http\Controllers\Pegawai\TugasController as TugasSayaController; 
+use App\Http\Controllers\Pegawai\TugasController as TugasSayaController;
+use App\Http\Controllers\KPH\PenugasanController as KphPenugasanController;
+use App\Http\Controllers\KPH\RiwayatKepegawaianController as KphRiwayatKepegawaianController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -92,6 +94,10 @@ Route::middleware(['auth', 'role:kph'])->prefix('kph')->name('kph.')->group(func
 
     Route::get('/pegawai', [KphPegawaiController::class, 'index'])->name('pegawai.index');
     Route::get('/pegawai/{id}', [KphPegawaiController::class, 'show'])->name('pegawai.show');
+
+    Route::get('/penugasan', [KphPenugasanController::class, 'index'])->name('penugasan.index');
+
+    Route::get('/riwayat-kepegawaian', [KphRiwayatKepegawaianController::class, 'index'])->name('riwayat_kepegawaian.index');
 });
 
 
