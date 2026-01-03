@@ -40,6 +40,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::delete('/pegawai/{pegawai}', [PegawaiController::class, 'delete'])->name('pegawai.delete');
 
     Route::get('/riwayat-kepegawaian', [RiwayatKepegawaianController::class, 'index'])->name('riwayat_kepegawaian.index');
+    Route::get('/riwayat-kepegawaian/create', [RiwayatKepegawaianController::class, 'create'])->name('riwayat_kepegawaian.create');
+    Route::post('/riwayat-kepegawaian', [RiwayatKepegawaianController::class, 'store'])->name('riwayat_kepegawaian.store');
+    Route::get('/riwayat-kepegawaian/{riwayat}/edit', [RiwayatKepegawaianController::class, 'edit'])->name('riwayat_kepegawaian.edit');
+    Route::put('/riwayat-kepegawaian/{riwayat}', [RiwayatKepegawaianController::class, 'update'])->name('riwayat_kepegawaian.update');
+    Route::delete('/riwayat-kepegawaian/{riwayat}', [RiwayatKepegawaianController::class, 'delete'])->name('riwayat_kepegawaian.delete');
 
     Route::get('/golongan', [GolonganController::class, 'index'])->name('index.golongan');
     Route::post('/golongan', [GolonganController::class, 'store'])->name('store.golongan');

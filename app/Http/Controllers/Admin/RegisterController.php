@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Golongan;
 use App\Models\Jabatan;
 use App\Models\Pegawai;
+use App\Models\RiwayatKepegawaian;
 use App\Models\UnitKerja;
 use App\Models\User;
 use App\Services\LogService;
@@ -69,19 +70,29 @@ class RegisterController extends Controller
                 'catatan_verifikasi' => $request->catatan_verifikasi,
             ]);
 
-            // 2️⃣ Simpan pegawai (terkait user)
+            // 2️⃣ Simpan pegawai
             Pegawai::create([
                 'user_id' => $user->id,
                 'unitkerja_id' => $request->unitkerja_id,
                 'golongan_id' => $request->golongan_id,
                 'jabatan_id' => $request->jabatan_id,
                 'status_pegawai' => $request->status_pegawai,
-                'data_diri_id' => null, // opsional, nanti diisi
+                'data_diri_id' => null,
+            ]);
+
+            // 3️⃣ Simpan riwayat kepegawaian (AUTO)
+            RiwayatKepegawaian::create([
+                'user_id' => $user->id,
+                'unitkerja_id' => $request->unitkerja_id,
+                'golongan_id' => $request->golongan_id,
+                'jabatan_id' => $request->jabatan_id,
+                'tgl_mulai' => $user->created_at->toDateString(),
+                'tgl_selesai' => null,
             ]);
 
             DB::commit();
 
-            // Log aktivitas pembuatan user
+            // Log aktivitas
             $this->logService->logAction('Membuat user baru', [
                 'name' => $user->name,
                 'role' => $user->role
@@ -89,11 +100,10 @@ class RegisterController extends Controller
 
             return redirect()
                 ->route('admin.register.index')
-                ->with('success', 'User & Pegawai berhasil ditambahkan');
+                ->with('success', 'User, Pegawai & Riwayat Kepegawaian berhasil ditambahkan');
         } catch (\Throwable $e) {
             DB::rollBack();
 
-            // Log error jika terjadi kesalahan
             $this->logService->logAction('Gagal membuat user baru', [
                 'error' => $e->getMessage(),
             ]);
@@ -153,9 +163,21 @@ class RegisterController extends Controller
                 'catatan_verifikasi' => $request->catatan_verifikasi,
             ]);
 
-            // 2️⃣ Update / Create pegawai
+            // 2️⃣ Ambil pegawai lama (jika ada)
+            $pegawai = Pegawai::where('user_id', $user->id)->first();
+
+            $isMutasi = false;
+
+            if ($pegawai) {
+                $isMutasi =
+                    $pegawai->unitkerja_id != $request->unitkerja_id ||
+                    $pegawai->golongan_id  != $request->golongan_id ||
+                    $pegawai->jabatan_id   != $request->jabatan_id;
+            }
+
+            // 3️⃣ Update pegawai
             Pegawai::updateOrCreate(
-                ['user_id' => $user->id], // kondisi
+                ['user_id' => $user->id],
                 [
                     'unitkerja_id' => $request->unitkerja_id,
                     'golongan_id' => $request->golongan_id,
@@ -164,21 +186,40 @@ class RegisterController extends Controller
                 ]
             );
 
+            // 4️⃣ Jika mutasi → kelola riwayat kepegawaian
+            if ($isMutasi) {
+
+                // Tutup riwayat aktif lama
+                RiwayatKepegawaian::where('user_id', $user->id)
+                    ->whereNull('tgl_selesai')
+                    ->update([
+                        'tgl_selesai' => now()->toDateString(),
+                    ]);
+
+                // Tambah riwayat baru
+                RiwayatKepegawaian::create([
+                    'user_id' => $user->id,
+                    'unitkerja_id' => $request->unitkerja_id,
+                    'golongan_id' => $request->golongan_id,
+                    'jabatan_id' => $request->jabatan_id,
+                    'tgl_mulai' => now()->toDateString(),
+                    'tgl_selesai' => null,
+                ]);
+            }
+
             DB::commit();
 
-            // Log aktivitas update user
             $this->logService->logAction('Memperbarui data user', [
                 'name' => $user->name,
-                'role' => $user->role,
+                'mutasi' => $isMutasi ? 'YA' : 'TIDAK'
             ]);
 
             return redirect()
                 ->route('admin.register.index')
-                ->with('success', 'User & Pegawai berhasil diperbarui');
+                ->with('success', 'User berhasil diperbarui');
         } catch (\Throwable $e) {
             DB::rollBack();
 
-            // Log error jika terjadi kesalahan
             $this->logService->logAction('Gagal memperbarui data user', [
                 'error' => $e->getMessage(),
             ]);
