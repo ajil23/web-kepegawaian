@@ -72,7 +72,7 @@
                         </td>
 
                         <td class="py-4 text-right whitespace-nowrap">
-                            <button type="button" class="text-slate-600 hover:text-red-600 font-medium transition" onclick="openDetailModal({{ $item->id }})">
+                            <button type="button" class="text-slate-600 hover:text-red-600 font-medium transition" data-pegawai-id="{{$item->id}}" onclick="openDetailModal(this.getAttribute('data-pegawai-id'))">
                                 Detail
                             </button>
                         </td>
@@ -260,6 +260,13 @@
                 if (el.tagName !== 'IMG') el.textContent = text;
             });
         }
+
+        document.querySelectorAll('.detail-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const pegawaiId = this.getAttribute('data-pegawai-id');
+                openDetailModal(pegawaiId);
+            });
+        });
 
     });
 </script>
