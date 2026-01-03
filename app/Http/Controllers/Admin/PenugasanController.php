@@ -41,7 +41,6 @@ class PenugasanController extends Controller
 
         DB::transaction(function () use ($request) {
 
-            // Simpan TUGAS
             $tugas = Tugas::create([
                 'judul'     => $request->judul,
                 'deskripsi' => $request->deskripsi,
@@ -50,12 +49,11 @@ class PenugasanController extends Controller
                 'user_id'   => auth()->id(),
             ]);
 
-            // Simpan PENUGASAN untuk setiap pegawai
             foreach ($request->pegawai_id as $pegawaiId) {
                 Penugasan::create([
                     'pegawai_id' => $pegawaiId,
                     'tugas_id'   => $tugas->id,
-                    'status'     => 'ditugaskan',
+                    'status'     => 'baru',
                 ]);
             }
         });
@@ -67,14 +65,12 @@ class PenugasanController extends Controller
 
     public function edit(Tugas $penugasan)
     {
-        // Ambil semua pegawai (join dengan user untuk nama)
         $pegawai = Pegawai::with('user')
             ->join('users', 'users.id', '=', 'pegawai.user_id')
             ->orderBy('users.name')
             ->select('pegawai.*')
             ->get();
 
-        // Ambil id pegawai yang sudah ditugaskan pada tugas ini
         $pegawaiTerpilih = $penugasan->penugasan->pluck('pegawai_id')->toArray();
 
         return view('pages.admin.penugasan.edit', compact('penugasan', 'pegawai', 'pegawaiTerpilih'));
@@ -93,28 +89,23 @@ class PenugasanController extends Controller
 
         DB::transaction(function () use ($request, $penugasan) {
 
-            // 1️⃣ Update data TUGAS
             $penugasan->update([
                 'judul'     => $request->judul,
                 'deskripsi' => $request->deskripsi,
                 'deadline'  => $request->deadline,
                 'prioritas' => $request->prioritas,
-                // tetap pertahankan user_id pembuat
             ]);
 
-            // 2️⃣ Sinkronisasi PENUGASAN pegawai
             $pegawaiIds = $request->pegawai_id;
 
-            // Hapus penugasan yang sudah tidak ada di request
             Penugasan::where('tugas_id', $penugasan->id)
                 ->whereNotIn('pegawai_id', $pegawaiIds)
                 ->delete();
 
-            // Tambah penugasan baru jika ada
             foreach ($pegawaiIds as $pegawaiId) {
                 Penugasan::firstOrCreate(
                     ['tugas_id' => $penugasan->id, 'pegawai_id' => $pegawaiId],
-                    ['status' => 'ditugaskan']
+                    ['status' => 'baru']
                 );
             }
         });
@@ -127,10 +118,8 @@ class PenugasanController extends Controller
     public function delete(Tugas $penugasan)
     {
         DB::transaction(function () use ($penugasan) {
-            // Hapus semua penugasan terkait
             Penugasan::where('tugas_id', $penugasan->id)->delete();
 
-            // Hapus tugas
             $penugasan->delete();
         });
 

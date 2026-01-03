@@ -87,6 +87,7 @@ Route::middleware(['auth', 'role:pegawai'])->prefix('pegawai')->name('pegawai.')
     Route::get('/data-kepegawaian', [DataKepegawaianController::class, 'index'])->name('data_kepegawaian.index');
 
     Route::get('/tugas-saya', [TugasSayaController::class, 'index'])->name('tugas.index');
+    Route::patch('/tugas-saya/penugasan/{penugasan}/status',[TugasSayaController::class, 'updateStatus'])->name('tugas.update-status');
 });
 
 Route::middleware(['auth', 'role:kph'])->prefix('kph')->name('kph.')->group(function () {
