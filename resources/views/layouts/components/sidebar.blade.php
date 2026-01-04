@@ -165,7 +165,8 @@
                 Penugasan
             </a>
 
-            <a href="#" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors text-slate-700 hover:bg-emerald-50 hover:text-emerald-600">
+            <a href="{{ route('kph.catatan_kegiatan.index') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors @if(request()->routeIs('kph.catatan_kegiatan.index')) bg-green-50 text-green-600 @else text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 @endif">
+
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -201,7 +202,7 @@
                 Data Kepegawaian Saya
             </a>
 
-            <a href="#" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors text-slate-700 hover:bg-emerald-50 hover:text-emerald-600">
+            <a href="{{ route('pegawai.direktori.index') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors @if(request()->routeIs('pegawai.direktori.index')) bg-green-50 text-green-600 @else text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 @endif">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
@@ -225,7 +226,7 @@
                 Catatan Kegiatan
             </a>
 
-            <a href="#" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors text-slate-700 hover:bg-emerald-50 hover:text-emerald-600">
+            <a href="{{ route('pegawai.notifikasi.index') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors @if(request()->routeIs('pegawai.notifikasi.index')) bg-green-50 text-green-600 @else text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 @endif">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>

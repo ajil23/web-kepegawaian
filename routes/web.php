@@ -20,6 +20,8 @@ use App\Http\Controllers\Pegawai\TugasController as TugasSayaController;
 use App\Http\Controllers\KPH\PenugasanController as KphPenugasanController;
 use App\Http\Controllers\KPH\RiwayatKepegawaianController as KphRiwayatKepegawaianController;
 use App\Http\Controllers\Pegawai\CatatanKegiatanController;
+use App\Http\Controllers\Pegawai\DirektoriController;
+use App\Http\Controllers\Pegawai\NotifikasiController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -100,6 +102,11 @@ Route::middleware(['auth', 'role:pegawai'])->prefix('pegawai')->name('pegawai.')
     Route::get('/catatan-kegiatan/{id}/edit', [CatatanKegiatanController::class, 'edit'])->name('catatan_kegiatan.edit');
     Route::put('/catatan-kegiatan/{id}', [CatatanKegiatanController::class, 'update'])->name('catatan_kegiatan.update');
     Route::delete('/catatan-kegiatan/{id}', [CatatanKegiatanController::class, 'delete'])->name('catatan_kegiatan.delete');
+
+    Route::get('/direktori', [DirektoriController::class, 'index'])->name('direktori.index');
+    Route::get('/direktori/{id}', [DirektoriController::class, 'show'])->name('direktori.show');
+
+    Route::get('/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');
 });
 
 Route::middleware(['auth', 'role:kph'])->prefix('kph')->name('kph.')->group(function () {
@@ -111,6 +118,8 @@ Route::middleware(['auth', 'role:kph'])->prefix('kph')->name('kph.')->group(func
     Route::get('/penugasan', [KphPenugasanController::class, 'index'])->name('penugasan.index');
 
     Route::get('/riwayat-kepegawaian', [KphRiwayatKepegawaianController::class, 'index'])->name('riwayat_kepegawaian.index');
+
+    Route::get('/catatan-kegiatan', [CatatanController::class, 'index'])->name('catatan_kegiatan.index');
 });
 
 
