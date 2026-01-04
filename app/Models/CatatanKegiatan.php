@@ -18,6 +18,7 @@ class CatatanKegiatan extends Model
         'judul',
         'deskripsi',
         'status',
+        'catatan_status',
     ];
 
     public function pegawai()

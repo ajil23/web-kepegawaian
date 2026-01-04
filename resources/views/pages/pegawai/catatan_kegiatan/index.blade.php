@@ -81,7 +81,7 @@
                             {{-- Jika ditolak, tampilkan tombol lihat alasan --}}
                             @if ($item->status === 'tolak')
                             <button type="button"
-                                onclick="openAlasanModal(`{{ $item->catatan_admin ?? '-' }}`)"
+                                onclick="openAlasanModal(`{{ $item->catatan_status ?? '-' }}`)"
                                 class="text-blue-600 hover:text-blue-800 font-medium transition">
                                 Lihat Alasan
                             </button>
