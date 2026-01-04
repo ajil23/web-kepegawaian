@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CatatanController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\GolonganController;
 use App\Http\Controllers\Admin\JabatanController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\Pegawai\DataKepegawaianController;
 use App\Http\Controllers\Pegawai\TugasController as TugasSayaController;
 use App\Http\Controllers\KPH\PenugasanController as KphPenugasanController;
 use App\Http\Controllers\KPH\RiwayatKepegawaianController as KphRiwayatKepegawaianController;
+use App\Http\Controllers\Pegawai\CatatanKegiatanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -59,6 +61,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/penugasan/{penugasan}', [PenugasanController::class, 'update'])->name('penugasan.update');
     Route::delete('/penugasan/{penugasan}', [PenugasanController::class, 'delete'])->name('penugasan.delete');
 
+    Route::get('/catatan-kegiatan', [CatatanController::class, 'index'])->name('catatan_kegiatan.index'); 
+    Route::patch('/catatan-kegiatan/{catatan}/status', [CatatanController::class, 'updateStatus'])->name('catatan_kegiatan.status');    
+
     Route::get('/golongan', [GolonganController::class, 'index'])->name('index.golongan');
     Route::post('/golongan', [GolonganController::class, 'store'])->name('store.golongan');
     Route::put('/golongan/{id}', [GolonganController::class, 'update'])->name('update.golongan');
@@ -88,6 +93,13 @@ Route::middleware(['auth', 'role:pegawai'])->prefix('pegawai')->name('pegawai.')
 
     Route::get('/tugas-saya', [TugasSayaController::class, 'index'])->name('tugas.index');
     Route::patch('/tugas-saya/penugasan/{penugasan}/status',[TugasSayaController::class, 'updateStatus'])->name('tugas.update-status');
+
+    Route::get('/catatan-kegiatan', [CatatanKegiatanController::class, 'index'])->name('catatan_kegiatan.index');
+    Route::get('/catatan-kegiatan/create', [CatatanKegiatanController::class, 'create'])->name('catatan_kegiatan.create');
+    Route::post('/catatan-kegiatan', [CatatanKegiatanController::class, 'store'])->name('catatan_kegiatan.store');
+    Route::get('/catatan-kegiatan/{id}/edit', [CatatanKegiatanController::class, 'edit'])->name('catatan_kegiatan.edit');
+    Route::put('/catatan-kegiatan/{id}', [CatatanKegiatanController::class, 'update'])->name('catatan_kegiatan.update');
+    Route::delete('/catatan-kegiatan/{id}', [CatatanKegiatanController::class, 'delete'])->name('catatan_kegiatan.delete');
 });
 
 Route::middleware(['auth', 'role:kph'])->prefix('kph')->name('kph.')->group(function () {
