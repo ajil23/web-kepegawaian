@@ -60,15 +60,36 @@
 
             <!-- Icon -->
             <div class="flex-shrink-0">
-                @if($notification['type'] === 'user')
-                    <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
-                        👤
-                    </div>
+                @if($notification['type'] === 'tugas')
+                <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12
+                   a2 2 0 002 2h10
+                   a2 2 0 002-2V7
+                   a2 2 0 00-2-2h-2
+                   M9 5a2 2 0 002 2h2
+                   a2 2 0 002-2
+                   M9 5a2 2 0 012-2h2
+                   a2 2 0 012 2" />
+                    </svg>
+                </div>
                 @else
-                    <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center">
-                        ✏️
-                    </div>
+                <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6
+                   M7 4h5.586
+                   a1 1 0 01.707.293
+                   l4.414 4.414
+                   a1 1 0 01.293.707V20
+                   a2 2 0 01-2 2H7
+                   a2 2 0 01-2-2V6
+                   a2 2 0 012-2z" />
+                    </svg>
+                </div>
                 @endif
+
             </div>
 
             <!-- Content -->
@@ -97,7 +118,7 @@
                     </span>
 
                     <a href="{{ $notification['link'] }}"
-                       class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                       class="text-sm text-emerald-600 hover:text-emerald-800 font-medium">
                         Detail
                     </a>
                 </div>
