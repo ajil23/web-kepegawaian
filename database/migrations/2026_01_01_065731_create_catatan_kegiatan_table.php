@@ -19,6 +19,8 @@ return new class extends Migration
             $table->year('periode_tahun');
             $table->text('judul');
             $table->text('deskripsi');
+            $table->text('catatan_status')->nullable();
+            $table->string('status')->values(['draft', 'ajukan', 'setuju', 'tolak']);
             $table->timestamps();
         });
     }
