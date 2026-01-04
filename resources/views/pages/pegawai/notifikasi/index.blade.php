@@ -14,149 +14,125 @@
 <div class="bg-white rounded-xl shadow-sm border border-slate-100">
 
     <!-- Header -->
-    <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+    <div class="p-6 border-b border-slate-100">
         <h3 class="font-bold text-slate-800">Data Notifikasi (2 Hari Terakhir)</h3>
     </div>
 
-    <!-- Table -->
-    <div class="p-6">
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead>
-                    <tr class="text-slate-500 uppercase text-xs">
-                        <th class="pb-3 text-left">No</th>
-                        <th class="pb-3 text-left">Judul</th>
-                        <th class="pb-3 text-left">Deskripsi</th>
-                        <th class="pb-3 text-left">Tipe</th>
-                        <th class="pb-3 text-left">Tanggal Dibuat</th>
-                        <th class="pb-3 text-right">Aksi</th>
-                    </tr>
-                </thead>
+    <!-- Content -->
+    <div class="p-6 space-y-4">
 
-                <tbody class="divide-y divide-slate-100">
-                    @php
-                        $notifications = collect();
+        @php
+            $notifications = collect();
 
-                        // Add tasks to notifications
-                        foreach($tugas as $task) {
-                            $notifications->push([
-                                'id' => $task->id,
-                                'judul' => $task->judul,
-                                'deskripsi' => 'Kamu mendapatkan tugas baru',
-                                'tipe' => 'Tugas',
-                                'created_at' => $task->created_at,
-                                'model' => $task,
-                                'type' => 'tugas',
-                                'status' => null,
-                                'link' => null
-                            ]);
-                        }
+            // TUGAS (tugas + penugasan = satu kesatuan)
+            foreach ($tugas as $task) {
+                $notifications->push([
+                    'id'         => $task->id,
+                    'judul'      => $task->judul,
+                    'deskripsi'  => 'Kamu mendapatkan tugas baru',
+                    'tipe'       => 'Tugas',
+                    'created_at'=> $task->created_at,
+                    'type'       => 'tugas',
+                    'link'       => route('pegawai.tugas.index'),
+                    'status'     => null,
+                ]);
+            }
 
-                        // Add assignments to notifications
-                        foreach($penugasan as $assignment) {
-                            $notifications->push([
-                                'id' => $assignment->id,
-                                'judul' => $assignment->tugas->judul ?? 'Tugas Tidak Ditemukan',
-                                'deskripsi' => 'Kamu mendapatkan tugas baru',
-                                'tipe' => 'Penugasan',
-                                'created_at' => $assignment->created_at,
-                                'model' => $assignment,
-                                'type' => 'penugasan',
-                                'status' => null,
-                                'link' => route('pegawai.tugas-saya.index')
-                            ]);
-                        }
+            // CATATAN KEGIATAN (hanya setuju / tolak)
+            foreach ($catatanKegiatan as $activity) {
+                $notifications->push([
+                    'id'         => $activity->id,
+                    'judul'      => $activity->judul,
+                    'deskripsi'  => $activity->status === 'tolak'
+                        ? 'Catatan kegiatan kamu ditolak'
+                        : 'Catatan kegiatan kamu diterima',
+                    'tipe'       => 'Catatan Kegiatan',
+                    'created_at'=> $activity->created_at,
+                    'type'       => 'catatan',
+                    'status'     => $activity->status,
+                    'link'       => null,
+                ]);
+            }
 
-                        // Add activity logs to notifications
-                        foreach($catatanKegiatan as $activity) {
-                            $deskripsi = '';
-                            if($activity->status == 'disetujui' || $activity->status == 'setuju') {
-                                $deskripsi = 'Catatan kegiatan kamu diterima';
-                            } elseif($activity->status == 'ditolak') {
-                                $deskripsi = 'Catatan kegiatan kamu ditolak';
-                            } else {
-                                $deskripsi = 'Catatan kegiatan sedang menunggu persetujuan';
-                            }
+            $notifications = $notifications->sortByDesc('created_at')->values();
+        @endphp
 
-                            $notifications->push([
-                                'id' => $activity->id,
-                                'judul' => $activity->judul,
-                                'deskripsi' => $deskripsi,
-                                'tipe' => 'Catatan Kegiatan',
-                                'created_at' => $activity->created_at,
-                                'model' => $activity,
-                                'type' => 'catatan',
-                                'status' => $activity->status,
-                                'link' => null
-                            ]);
-                        }
+        @forelse($notifications as $notification)
+        <div class="flex items-start gap-4 p-4 border border-slate-100 rounded-lg hover:bg-slate-50 transition">
 
-                        // Sort by creation date (newest first)
-                        $notifications = $notifications->sortByDesc('created_at')->values();
-                    @endphp
+            <!-- Icon -->
+            <div class="flex-shrink-0">
+                @if($notification['type'] === 'tugas')
+                    <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                        📋
+                    </div>
+                @else
+                    <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                        📝
+                    </div>
+                @endif
+            </div>
 
-                    @forelse($notifications as $index => $notification)
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="py-4">{{ $index + 1 }}</td>
-                        <td class="py-4 font-medium text-slate-800">{{ $notification['judul'] }}</td>
-                        <td class="py-4 text-slate-600">{{ $notification['deskripsi'] }}</td>
-                        <td class="py-4">
-                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                                {{ $notification['tipe'] }}
-                            </span>
-                        </td>
-                        <td class="py-4">{{ \Carbon\Carbon::parse($notification['created_at'])->format('d M Y H:i') }}</td>
-                        <td class="py-4 text-right whitespace-nowrap">
-                            @if($notification['type'] == 'penugasan' && $notification['link'])
-                                <a href="{{ $notification['link'] }}"
-                                   class="text-blue-600 hover:text-blue-800 font-medium transition">
-                                    Detail
-                                </a>
-                            @else
-                                <a href="#"
-                                   class="text-slate-600 hover:text-blue-600 font-medium transition"
-                                   onclick="showNotificationDetail({{ json_encode($notification) }})">
-                                    Detail
-                                </a>
-                            @endif
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" class="py-8 text-center text-slate-500">
-                            Tidak ada notifikasi dalam 2 hari terakhir
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+            <!-- Content -->
+            <div class="flex-1">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h4 class="font-semibold text-slate-800">
+                            {{ $notification['judul'] }}
+                        </h4>
+                        <p class="text-sm text-slate-600 mt-1">
+                            {{ $notification['deskripsi'] }}
+                        </p>
+                    </div>
+
+                    <span class="text-xs text-slate-500 whitespace-nowrap">
+                        {{ \Carbon\Carbon::parse($notification['created_at'])->diffForHumans() }}
+                    </span>
+                </div>
+
+                <div class="mt-3 flex items-center justify-between">
+                    <span class="text-xs font-medium px-3 py-1 rounded-full
+                        {{ $notification['type'] === 'tugas'
+                            ? 'bg-blue-100 text-blue-700'
+                            : 'bg-green-100 text-green-700' }}">
+                        {{ $notification['tipe'] }}
+                    </span>
+
+                    @if($notification['link'])
+                        <a href="{{ $notification['link'] }}"
+                        class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                            Detail
+                        </a>
+                    @else
+                        <a href="{{ route('pegawai.catatan_kegiatan.index') }}"
+                        onclick="showNotificationDetail({{ json_encode($notification) }})"
+                        class="text-sm text-slate-600 hover:text-blue-600 font-medium">
+                            Detail
+                        </a>
+                    @endif
+                </div>
+            </div>
         </div>
+        @empty
+        <div class="text-center text-slate-500 py-10">
+            Tidak ada notifikasi dalam 2 hari terakhir
+        </div>
+        @endforelse
+
     </div>
 </div>
 
 <script>
 function showNotificationDetail(notification) {
-    // This function can be expanded to show a modal with detailed information
-    let message = 'Detail Notifikasi:\n\n' +
-                  'Judul: ' + notification.judul + '\n' +
-                  'Deskripsi: ' + notification.deskripsi + '\n' +
-                  'Tipe: ' + notification.tipe + '\n' +
-                  'Tanggal Dibuat: ' + notification.created_at;
+    let message =
+        'Judul: ' + notification.judul + '\n' +
+        'Deskripsi: ' + notification.deskripsi + '\n' +
+        'Tipe: ' + notification.tipe + '\n' +
+        'Tanggal: ' + notification.created_at;
 
-    if(notification.status) {
-        let statusText = '';
-        switch(notification.status) {
-            case 'disetujui':
-            case 'setuju':
-                statusText = 'Diterima';
-                break;
-            case 'ditolak':
-                statusText = 'Ditolak';
-                break;
-            default:
-                statusText = 'Menunggu Persetujuan';
-        }
-        message += '\nStatus: ' + statusText;
+    if (notification.status) {
+        message += '\nStatus: ' +
+            (notification.status === 'tolak' ? 'Ditolak' : 'Diterima');
     }
 
     alert(message);

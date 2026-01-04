@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\GolonganController;
 use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\UnitKerjaController;
 use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\Admin\NotifAdminController;
 use App\Http\Controllers\Admin\PegawaiController;
 use App\Http\Controllers\Admin\PenugasanController;
 use App\Http\Controllers\Admin\RegisterController;
@@ -82,6 +83,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::delete('/unitkerja/{id}', [UnitKerjaController::class, 'delete'])->name('delete.unitkerja');
 
     Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
+
+    Route::get('/notifikasi', [NotifAdminController::class, 'index'])->name('notifikasi.index');
 });
 
 Route::middleware(['auth', 'role:pegawai'])->prefix('pegawai')->name('pegawai.')->group(function () {
