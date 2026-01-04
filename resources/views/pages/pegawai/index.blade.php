@@ -203,7 +203,7 @@
                     </td>
 
                     <td class="px-6 py-4 text-right">
-                        <a href="{{ route('pegawai.tugas.show', $penugasan->tugas->id) }}"
+                        <a href="#"
                             class="text-slate-600 hover:text-blue-600 font-medium transition">
                             Detail
                         </a>
