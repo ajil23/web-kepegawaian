@@ -29,13 +29,13 @@ class CatatanController extends Controller
     {
         $request->validate([
             'status' => 'required|in:setuju,tolak',
-            'catatan_admin' => 'nullable|string',
+            'catatan_status' => 'nullable|string',
         ]);
 
         $catatan->update([
             'status' => $request->status,
-            'catatan_admin' => $request->status === 'tolak'
-                ? $request->catatan_admin
+            'catatan_status' => $request->status === 'tolak'
+                ? $request->catatan_status
                 : null,
         ]);
 

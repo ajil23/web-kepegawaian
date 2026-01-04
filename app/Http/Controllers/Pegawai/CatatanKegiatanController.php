@@ -92,21 +92,21 @@ class CatatanKegiatanController extends Controller
         if (in_array($catatan_kegiatan->status, ['setuju', 'tolak'])) {
             abort(403, 'Catatan sudah diproses dan tidak dapat diubah');
         }
-
+        
         $request->validate([
             'periode_bulan' => 'required|integer|min:1|max:12',
             'periode_tahun' => 'required|integer',
             'judul'         => 'required|string',
             'deskripsi'     => 'required|string',
-            'action'        => 'required|in:draft,ajukan',
+            'aksi'        => 'required|in:draft,ajukan',
         ]);
-
+        
         $catatan_kegiatan->update([
             'periode_bulan' => $request->periode_bulan,
             'periode_tahun' => $request->periode_tahun,
             'judul'         => $request->judul,
             'deskripsi'     => $request->deskripsi,
-            'status'        => $request->action,
+            'status'        => $request->aksi,
             'catatan_status' => null,
         ]);
 

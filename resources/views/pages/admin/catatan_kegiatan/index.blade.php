@@ -75,9 +75,8 @@
                         <!-- Status -->
                         <td class="py-4">
                             <select
-                                class="status-select px-3 py-1 text-xs font-semibold rounded-full bg-white border text-slate-700 cursor-pointer"
-                                data-id="{{ $item->id }}"
-                                data-current="{{ $item->status }}">
+                                class="status-select px-3 py-1 text-xs font-semibold rounded-full border cursor-pointer focus:outline-none"
+                                data-id="{{ $item->id }}">
 
                                 <option value="ajukan" @selected($item->status === 'ajukan')>
                                     Diajukan
@@ -169,7 +168,7 @@
             },
             body: JSON.stringify({
                 status: status,
-                catatan_admin: catatan
+                catatan_status: catatan
             })
         }).then(() => location.reload());
     }
@@ -190,4 +189,27 @@
         updateStatus(selectedCatatanId, selectedStatus, catatan);
     }
 </script>
+<script>
+    function updateStatusStyle(select) {
+        select.classList.remove(
+            'bg-green-100', 'text-green-700', 'border-green-300',
+            'bg-red-100', 'text-red-700', 'border-red-300',
+            'bg-yellow-100', 'text-yellow-700', 'border-yellow-300'
+        );
+
+        if (select.value === 'setuju') {
+            select.classList.add('bg-green-100', 'text-green-700', 'border-green-300');
+        } else if (select.value === 'tolak') {
+            select.classList.add('bg-red-100', 'text-red-700', 'border-red-300');
+        } else {
+            select.classList.add('bg-yellow-100', 'text-yellow-700', 'border-yellow-300');
+        }
+    }
+
+    document.querySelectorAll('.status-select').forEach(select => {
+        updateStatusStyle(select); // initial load
+        select.addEventListener('change', () => updateStatusStyle(select));
+    });
+</script>
+
 @endpush
