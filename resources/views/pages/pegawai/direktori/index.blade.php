@@ -72,7 +72,7 @@
                         </td>
 
                         <td class="py-4 text-right whitespace-nowrap">
-                            <button type="button" class="text-slate-600 hover:text-red-600 font-medium transition" data-pegawai-id="{{$item->id}}" onclick="openDetailModal(this.getAttribute('data-pegawai-id'))">
+                            <button type="button" class="text-slate-600 hover:text-emerald-600 font-medium transition" data-pegawai-id="{{$item->id}}" onclick="openDetailModal(this.getAttribute('data-pegawai-id'))">
                                 Detail
                             </button>
                         </td>
