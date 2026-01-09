@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
-    <title>Kepegawaian</title>
+    <title>SIPANDA-KPH</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/avatar.png') }}">
 
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,9 +21,11 @@
         }
     </style>
 </head>
+
 <body class="min-h-screen bg-slate-50 flex items-center justify-center px-4">
 
     {{ $slot }}
 
 </body>
+
 </html>

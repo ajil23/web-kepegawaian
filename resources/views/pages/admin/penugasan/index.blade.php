@@ -6,7 +6,7 @@
 @section('content')
 
 @if (session('success'))
-<div class="mb-4 px-4 py-3 rounded-lg bg-green-100 text-green-700 text-sm">
+<div class="mb-4 px-4 py-3 rounded-lg bg-green-100 text-green-800 text-sm">
     {{ session('success') }}
 </div>
 @endif
@@ -17,7 +17,7 @@
     <div class="p-6 border-b border-slate-100 flex justify-between items-center">
         <h3 class="font-bold text-slate-800">Penugasan Pegawai</h3>
         <a href="{{ route('admin.penugasan.create') }}"
-            class="px-4 py-2 text-sm text-white bg-green-600 rounded-lg hover:bg-green-700 transition">
+            class="px-4 py-2 text-sm text-white bg-green-800 rounded-lg hover:bg-green-900 transition">
             Tambah Data
         </a>
     </div>
@@ -77,14 +77,14 @@
                         <td class="py-4 text-right">
                             <button type="button"
                                 onclick="openDetailModal({{ $item->id }})"
-                                class="text-slate-600 hover:text-green-600 font-medium transition">
+                                class="text-slate-600 hover:text-green-800 font-medium transition">
                                 Detail
                             </button>
 
                             <span class="mx-2 text-slate-300">|</span>
 
                             <a href="{{ route('admin.penugasan.edit', $item->id) }}"
-                                class="text-slate-600 hover:text-green-600 font-medium transition">
+                                class="text-slate-600 hover:text-green-800 font-medium transition">
                                 Edit
                             </a>
 
@@ -198,7 +198,7 @@
                 } else if (p.status === 'proses') {
                     statusBadge = `<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-700">Proses</span>`; 
                 } else if (p.status === 'selesai') {
-                    statusBadge = `<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">Selesai</span>`;
+                    statusBadge = `<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-green-800 text-green-900">Selesai</span>`;
                 }
 
                 html += `<tr>

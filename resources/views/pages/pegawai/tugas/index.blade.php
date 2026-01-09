@@ -185,7 +185,7 @@
                 Batal
             </button>
             <button onclick="submitSelesai()"
-                class="px-4 py-2 bg-green-600 text-white rounded-lg">
+                class="px-4 py-2 bg-green-800 text-white rounded-lg">
                 Simpan
             </button>
         </div>

@@ -7,7 +7,7 @@
 
 {{-- NOTIFIKASI SUKSES --}}
 @if (session('success'))
-<div class="mb-4 px-4 py-3 rounded-lg bg-green-100 text-green-700 text-sm">
+<div class="mb-4 px-4 py-3 rounded-lg bg-green-100 text-green-800 text-sm">
     {{ session('success') }}
 </div>
 @endif
@@ -16,7 +16,7 @@
     <div class="p-6 border-b border-slate-100 flex justify-between items-center">
         <h3 class="font-bold text-slate-800">Data Golongan</h3>
 
-        <button type="button" onclick="openModal()" class="px-4 py-2 text-sm text-white bg-green-600 hover:bg-green-700 rounded-lg transition">
+        <button type="button" onclick="openModal()" class="px-4 py-2 text-sm text-white bg-green-800 hover:bg-green-900 rounded-lg transition">
             Tambah Data
         </button>
     </div>
@@ -52,7 +52,7 @@
                             @endif
                         </td>
                         <td class="py-4 text-right">
-                            <button type="button" onclick="openEditModal({{ $item->id }}, '{{ $item->nama_golongan }}', '{{ $item->aktif }}')" class="text-slate-600 hover:text-green-600 font-medium transition">
+                            <button type="button" onclick="openEditModal({{ $item->id }}, '{{ $item->nama_golongan }}', '{{ $item->aktif }}')" class="text-slate-600 hover:text-green-800 font-medium transition">
                                 Edit
                             </button>
 
@@ -107,7 +107,7 @@
                         class="w-full mt-1 px-4 py-2 rounded-lg border
                         {{ $errors->has('nama_golongan')
                             ? 'border-red-500 focus:ring-red-500'
-                            : 'border-slate-200 focus:ring-green-600' }}" required>
+                            : 'border-slate-200 focus:ring-green-800' }}" required>
 
                     @error('nama_golongan')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -124,7 +124,7 @@
                         class="w-full mt-1 px-4 py-2 rounded-lg border
                         {{ $errors->has('aktif')
                             ? 'border-red-500 focus:ring-red-500'
-                            : 'border-slate-200 focus:ring-green-600' }}" required>
+                            : 'border-slate-200 focus:ring-green-800' }}" required>
                         <option value="">-- Pilih Status --</option>
                         <option value="aktif" {{ old('aktif') == 'aktif' ? 'selected' : '' }}>Aktif</option>
                         <option value="nonaktif" {{ old('aktif') == 'nonaktif' ? 'selected' : '' }}>Tidak Aktif</option>
@@ -146,7 +146,7 @@
                 </button>
 
                 <button type="submit"
-                    class="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-lg">
+                    class="px-4 py-2 text-sm bg-green-800 hover:bg-green-900 text-white rounded-lg">
                     Simpan
                 </button>
             </div>
@@ -181,7 +181,7 @@
                     <input type="text"
                         id="edit_nama"
                         name="nama_golongan"
-                        class="w-full mt-1 px-4 py-2 rounded-lg border border-slate-200 focus:ring-green-600">
+                        class="w-full mt-1 px-4 py-2 rounded-lg border border-slate-200 focus:ring-green-800">
                 </div>
 
                 <div>
@@ -190,7 +190,7 @@
                     </label>
                     <select name="aktif"
                         id="edit_aktif"
-                        class="w-full mt-1 px-4 py-2 rounded-lg border border-slate-200 focus:ring-green-600">
+                        class="w-full mt-1 px-4 py-2 rounded-lg border border-slate-200 focus:ring-green-800">
                         <option value="aktif">Aktif</option>
                         <option value="nonaktif">Tidak Aktif</option>
                     </select>
@@ -207,7 +207,7 @@
                 </button>
 
                 <button type="submit"
-                    class="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-lg">
+                    class="px-4 py-2 text-sm bg-green-800 hover:bg-green-900 text-white rounded-lg">
                     Update
                 </button>
             </div>
