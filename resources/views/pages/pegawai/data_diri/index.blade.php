@@ -18,7 +18,7 @@ $isEmpty = !$dataDiri;
 
         <button id="btnAction"
             type="button"
-            class="px-4 py-2 text-sm rounded-lg text-white bg-green-600 hover:bg-green-700">
+            class="px-4 py-2 text-sm rounded-lg text-white bg-green-800 hover:bg-green-900">
             Edit
         </button>
 

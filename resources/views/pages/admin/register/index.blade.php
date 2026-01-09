@@ -6,7 +6,7 @@
 @section('content')
 
 @if (session('success'))
-<div class="mb-4 px-4 py-3 rounded-lg bg-green-100 text-green-700 text-sm">
+<div class="mb-4 px-4 py-3 rounded-lg bg-green-100 text-green-800 text-sm">
     {{ session('success') }}
 </div>
 @endif
@@ -16,7 +16,7 @@
     <div class="p-6 border-b border-slate-100 flex justify-between items-center">
         <h3 class="font-bold text-slate-800">Register & Verifikasi</h3>
         <a href="{{ route('admin.register.create') }}"
-            class="px-4 py-2 text-sm text-white bg-green-600 rounded-lg hover:bg-green-700 transition">
+            class="px-4 py-2 text-sm text-white bg-green-800 rounded-lg hover:bg-green-900 transition">
             Tambah Data
         </a>
     </div>
@@ -54,7 +54,7 @@
                         </td>
                         <td class="py-4 text-right">
                             <a href="{{ route('admin.register.edit', $user->id) }}"
-                                class="text-slate-600 hover:text-green-600 font-medium transition">
+                                class="text-slate-600 hover:text-green-800 font-medium transition">
                                 Edit
                             </a>
 

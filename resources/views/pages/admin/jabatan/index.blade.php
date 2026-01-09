@@ -7,7 +7,7 @@
 
 {{-- NOTIFIKASI SUKSES --}}
 @if (session('success'))
-<div class="mb-4 px-4 py-3 rounded-lg bg-green-100 text-green-700 text-sm">
+<div class="mb-4 px-4 py-3 rounded-lg bg-green-100 text-green-800 text-sm">
     {{ session('success') }}
 </div>
 @endif
@@ -18,7 +18,7 @@
 
         <button type="button"
             onclick="openModal()"
-            class="px-4 py-2 text-sm text-white bg-green-600 hover:bg-green-700 rounded-lg transition">
+            class="px-4 py-2 text-sm text-white bg-green-800 hover:bg-green-900 rounded-lg transition">
             Tambah Data
         </button>
     </div>
@@ -59,7 +59,7 @@
                         <td class="py-4 text-right">
                             <button type="button"
                                 onclick="openEditModal({{ $item->id }}, '{{ $item->nama_jabatan }}', '{{ $item->aktif }}')"
-                                class="text-slate-600 hover:text-green-600 font-medium transition">
+                                class="text-slate-600 hover:text-green-800 font-medium transition">
                                 Edit
                             </button>
 
@@ -121,7 +121,7 @@
 
             <div class="px-6 py-4 border-t flex justify-end gap-3">
                 <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded-lg">Batal</button>
-                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg">Simpan</button>
+                <button type="submit" class="px-4 py-2 bg-green-800 hover:bg-green-900 text-white rounded-lg">Simpan</button>
             </div>
         </form>
     </div>
@@ -152,7 +152,7 @@
 
             <div class="px-6 py-4 border-t flex justify-end gap-3">
                 <button type="button" onclick="closeEditModal()" class="px-4 py-2 border rounded-lg">Batal</button>
-                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg">Update</button>
+                <button type="submit" class="px-4 py-2 bg-green-800 hover:bg-green-900 text-white rounded-lg">Update</button>
             </div>
         </form>
     </div>

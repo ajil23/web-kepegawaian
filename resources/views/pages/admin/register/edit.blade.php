@@ -179,7 +179,7 @@
                 Batal
             </a>
             <button type="submit"
-                class="px-5 py-2 text-sm rounded-lg bg-green-600 text-white">
+                class="px-5 py-2 text-sm rounded-lg bg-green-800 hover:bg-green-900 text-white">
                 Update
             </button>
         </div>

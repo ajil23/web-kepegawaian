@@ -26,7 +26,7 @@
 
             <!-- Action -->
             <a href="{{ route('login') }}"
-                class="block w-full text-center bg-green-600 hover:bg-green-700
+                class="block w-full text-center bg-green-800 hover:bg-green-900
                 text-white font-bold py-3 rounded-xl shadow-lg transition">
                 Ke Halaman Login
             </a>

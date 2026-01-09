@@ -120,7 +120,7 @@
                 Batal
             </a>
             <button type="submit"
-                class="px-5 py-2 text-sm rounded-lg bg-green-600 text-white hover:bg-green-700">
+                class="px-5 py-2 text-sm rounded-lg bg-green-800 text-white hover:bg-green-900">
                 Simpan
             </button>
         </div>

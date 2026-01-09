@@ -6,7 +6,7 @@
 @section('content')
 
 @if (session('success'))
-<div class="mb-4 px-4 py-3 rounded-lg bg-green-100 text-green-700 text-sm">
+<div class="mb-4 px-4 py-3 rounded-lg bg-green-100 text-green-800 text-sm">
     {{ session('success') }}
 </div>
 @endif

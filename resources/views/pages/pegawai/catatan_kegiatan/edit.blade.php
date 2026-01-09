@@ -97,7 +97,7 @@
             <button type="submit"
                 name="aksi"
                 value="ajukan"
-                class="px-5 py-2 text-sm rounded-lg bg-green-600 text-white hover:bg-green-700">
+                class="px-5 py-2 text-sm rounded-lg bg-green-800 text-white hover:bg-green-900">
                 Ajukan
             </button>
         </div>
