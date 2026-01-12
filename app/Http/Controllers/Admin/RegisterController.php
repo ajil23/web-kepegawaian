@@ -93,10 +93,9 @@ class RegisterController extends Controller
             DB::commit();
 
             // Log aktivitas
-            $this->logService->logAction('Membuat user baru', [
-                'name' => $user->name,
-                'role' => $user->role
-            ]);
+            $this->logService->logAction(
+                "Data pengguna {$user->name} berhasil dibuat"
+            );
 
             return redirect()
                 ->route('admin.register.index')
