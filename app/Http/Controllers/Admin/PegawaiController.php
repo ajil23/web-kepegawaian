@@ -61,25 +61,20 @@ class PegawaiController extends Controller
         ]);
     }
 
-
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'unitkerja_id' => 'required|exists:ref_unitkerja,id',
-            'golongan_id' => 'required|exists:ref_golongan,id',
-            'jabatan_id' => 'required|exists:ref_jabatan,id',
-            'status_pegawai' => 'required|in:aktif,nonaktif',
+            'user_id'         => 'required|exists:users,id',
+            'unitkerja_id'    => 'required|exists:ref_unitkerja,id',
+            'golongan_id'     => 'required|exists:ref_golongan,id',
+            'jabatan_id'      => 'required|exists:ref_jabatan,id',
+            'status_pegawai'  => 'required|in:aktif,nonaktif',
         ]);
 
-        DB::beginTransaction();
-
         try {
-            // 1️⃣ Ambil user (validasi tambahan)
             $user = User::findOrFail($request->user_id);
 
-            // 2️⃣ Simpan pegawai
-            $pegawai = Pegawai::create([
+            Pegawai::create([
                 'user_id'        => $user->id,
                 'unitkerja_id'   => $request->unitkerja_id,
                 'golongan_id'    => $request->golongan_id,
@@ -88,24 +83,10 @@ class PegawaiController extends Controller
                 'data_diri_id'   => null,
             ]);
 
-            // 3️⃣ Simpan riwayat kepegawaian pertama
-            RiwayatKepegawaian::create([
-                'user_id' => $user->id,
-                'unitkerja_id' => $request->unitkerja_id,
-                'golongan_id' => $request->golongan_id,
-                'jabatan_id' => $request->jabatan_id,
-                'tgl_mulai' => $pegawai->created_at->toDateString(),
-                'tgl_selesai' => null,
-            ]);
-
-            DB::commit();
-
             return redirect()
                 ->route('admin.pegawai.index')
-                ->with('success', 'Pegawai & riwayat kepegawaian berhasil ditambahkan.');
+                ->with('success', 'Data pegawai berhasil ditambahkan.');
         } catch (\Throwable $e) {
-            DB::rollBack();
-
             return back()
                 ->withInput()
                 ->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
@@ -132,16 +113,12 @@ class PegawaiController extends Controller
             'status_pegawai' => 'required|in:aktif,nonaktif',
         ]);
 
-        DB::beginTransaction();
-
         try {
-            // 1️⃣ Deteksi perubahan (mutasi)
             $isMutasi =
                 $pegawai->unitkerja_id != $request->unitkerja_id ||
                 $pegawai->golongan_id  != $request->golongan_id ||
                 $pegawai->jabatan_id   != $request->jabatan_id;
 
-            // 2️⃣ Update data pegawai
             $pegawai->update([
                 'unitkerja_id'   => $request->unitkerja_id,
                 'golongan_id'    => $request->golongan_id,
@@ -149,35 +126,10 @@ class PegawaiController extends Controller
                 'status_pegawai' => $request->status_pegawai,
             ]);
 
-            // 3️⃣ Jika mutasi → kelola riwayat kepegawaian
-            if ($isMutasi) {
-
-                // Tutup riwayat aktif lama
-                RiwayatKepegawaian::where('user_id', $pegawai->user_id)
-                    ->whereNull('tgl_selesai')
-                    ->update([
-                        'tgl_selesai' => now()->toDateString(),
-                    ]);
-
-                // Tambah riwayat baru
-                RiwayatKepegawaian::create([
-                    'user_id' => $pegawai->user_id,
-                    'unitkerja_id' => $request->unitkerja_id,
-                    'golongan_id' => $request->golongan_id,
-                    'jabatan_id' => $request->jabatan_id,
-                    'tgl_mulai' => now()->toDateString(),
-                    'tgl_selesai' => null,
-                ]);
-            }
-
-            DB::commit();
-
             return redirect()
                 ->route('admin.pegawai.index')
                 ->with('success', 'Data pegawai berhasil diperbarui.');
         } catch (\Throwable $e) {
-            DB::rollBack();
-
             return back()
                 ->withInput()
                 ->with('error', 'Gagal memperbarui data: ' . $e->getMessage());
