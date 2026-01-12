@@ -209,10 +209,9 @@ class RegisterController extends Controller
 
             DB::commit();
 
-            $this->logService->logAction('Memperbarui data user', [
-                'name' => $user->name,
-                'mutasi' => $isMutasi ? 'YA' : 'TIDAK'
-            ]);
+            $this->logService->logAction(
+                "Data pengguna {$user->name} berhasil diperbarui"
+            );
 
             return redirect()
                 ->route('admin.register.index')

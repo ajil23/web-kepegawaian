@@ -17,7 +17,7 @@
                     <tr class="text-slate-500 uppercase text-xs">
                         <th class="pb-3 text-left">No</th>
                         <th class="pb-3 text-left">Nama Pengguna</th>
-                        <th class="pb-3 text-left">Aksi</th>
+                        <th class="pb-3 text-left">Aktifitas</th>
                         <th class="pb-3 text-left">Waktu</th>
                     </tr>
                 </thead>
