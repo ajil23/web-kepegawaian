@@ -30,7 +30,6 @@
                     <tr class="text-slate-500 uppercase text-xs">
                         <th class="pb-3 text-left">No</th>
                         <th class="pb-3 text-left">Nama Jabatan</th>
-                        <th class="pb-3 text-left">Status</th>
                         <th class="pb-3 text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -42,18 +41,6 @@
 
                         <td class="py-4 font-medium text-slate-800">
                             {{ $item->nama_jabatan }}
-                        </td>
-
-                        <td class="py-4">
-                            @if ($item->aktif === 'aktif')
-                                <span class="px-3 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full">
-                                    Aktif
-                                </span>
-                            @else
-                                <span class="px-3 py-1 text-xs font-semibold bg-red-100 text-red-600 rounded-full">
-                                    Tidak Aktif
-                                </span>
-                            @endif
                         </td>
 
                         <td class="py-4 text-right">
@@ -106,17 +93,6 @@
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-
-                <div>
-                    <label class="text-sm font-medium">Status</label>
-                    <select name="aktif"
-                        class="w-full mt-1 px-4 py-2 rounded-lg border
-                        {{ $errors->has('aktif') ? 'border-red-500' : 'border-slate-200' }}" required>
-                        <option value="">-- Pilih Status --</option>
-                        <option value="aktif">Aktif</option>
-                        <option value="nonaktif">Tidak Aktif</option>
-                    </select>
-                </div>
             </div>
 
             <div class="px-6 py-4 border-t flex justify-end gap-3">
@@ -142,12 +118,6 @@
             <div class="px-6 py-4 space-y-4">
                 <input type="text" id="edit_nama" name="nama_jabatan"
                     class="w-full px-4 py-2 rounded-lg border border-slate-200">
-
-                <select id="edit_aktif" name="aktif"
-                    class="w-full px-4 py-2 rounded-lg border border-slate-200">
-                    <option value="aktif">Aktif</option>
-                    <option value="nonaktif">Tidak Aktif</option>
-                </select>
             </div>
 
             <div class="px-6 py-4 border-t flex justify-end gap-3">
@@ -193,9 +163,8 @@
         modalToggle('modalTambah', false);
     }
 
-    function openEditModal(id, nama, aktif) {
+    function openEditModal(id, nama) {
         document.getElementById('edit_nama').value = nama;
-        document.getElementById('edit_aktif').value = aktif;
         document.getElementById('formEdit').action = `/admin/jabatan/${id}`;
         modalToggle('modalEdit', true);
     }

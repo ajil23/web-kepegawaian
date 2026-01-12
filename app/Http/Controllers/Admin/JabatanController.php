@@ -18,12 +18,10 @@ class JabatanController extends Controller
     {
         $request->validate([
             'nama_jabatan' => 'required|string|max:255',
-            'aktif' => 'required|string|max:50',
         ]);
 
         Jabatan::create([
             'nama_jabatan' => $request->nama_jabatan,
-            'aktif' => $request->aktif,
         ]);
 
         return redirect()->back()->with('success', 'Jabatan berhasil ditambahkan.');
@@ -33,13 +31,11 @@ class JabatanController extends Controller
     {
         $request->validate([
             'nama_jabatan' => 'required|string|max:255',
-            'aktif' => 'required|string|max:50',
         ]);
 
         $jabatan = Jabatan::findOrFail($id);
         $jabatan->update([
             'nama_jabatan' => $request->nama_jabatan,
-            'aktif' => $request->aktif,
         ]);
 
         return redirect()->back()->with('success', 'Jabatan berhasil diperbarui.');

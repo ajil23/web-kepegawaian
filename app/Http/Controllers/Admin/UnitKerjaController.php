@@ -18,12 +18,10 @@ class UnitKerjaController extends Controller
     {
         $request->validate([
             'nama_unitkerja' => 'required|string|max:255',
-            'aktif' => 'required|string|max:50',
         ]);
 
         UnitKerja::create([
             'nama_unitkerja' => $request->nama_unitkerja,
-            'aktif' => $request->aktif,
         ]);
 
         return redirect()->back()->with('success', 'Unit Kerja berhasil ditambahkan.');
@@ -33,13 +31,11 @@ class UnitKerjaController extends Controller
     {
         $request->validate([
             'nama_unitkerja' => 'required|string|max:255',
-            'aktif' => 'required|string|max:50',
         ]);
 
         $unitkerja = UnitKerja::findOrFail($id);
         $unitkerja->update([
             'nama_unitkerja' => $request->nama_unitkerja,
-            'aktif' => $request->aktif,
         ]);
 
         return redirect()->back()->with('success', 'Unit Kerja berhasil diperbarui.');

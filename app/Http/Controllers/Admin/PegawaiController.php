@@ -54,9 +54,9 @@ class PegawaiController extends Controller
     public function create()
     {
         return view('pages.admin.pegawai.create', [
-            'unitkerja' => UnitKerja::where('aktif', 'aktif')->orderBy('nama_unitkerja')->get(),
-            'golongan'  => Golongan::where('aktif', 'aktif')->orderBy('nama_golongan')->get(),
-            'jabatan'   => Jabatan::where('aktif', 'aktif')->orderBy('nama_jabatan')->get(),
+            'unitkerja' => UnitKerja::all(),
+            'golongan'  => Golongan::all(),
+            'jabatan'   => Jabatan::all(),
             'users'     => User::orderBy('name')->get(),
         ]);
     }
@@ -116,9 +116,9 @@ class PegawaiController extends Controller
     {
         return view('pages.admin.pegawai.edit', [
             'pegawai'  => $pegawai,
-            'unitkerja' => UnitKerja::where('aktif', 'aktif')->orderBy('nama_unitkerja')->get(),
-            'golongan' => Golongan::where('aktif', 'aktif')->orderBy('nama_golongan')->get(),
-            'jabatan'  => Jabatan::where('aktif', 'aktif')->orderBy('nama_jabatan')->get(),
+            'unitkerja' => UnitKerja::all(),
+            'golongan' => Golongan::all(),
+            'jabatan'  => Jabatan::all(),
             'users'    => User::orderBy('name')->get(),
         ]);
     }

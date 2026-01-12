@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('ref_golongan', function (Blueprint $table) {
             $table->id();
             $table->string('nama_golongan');
-            $table->string('aktif');
             $table->timestamps();
         });
     }

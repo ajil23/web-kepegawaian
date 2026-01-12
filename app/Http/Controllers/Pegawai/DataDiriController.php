@@ -20,7 +20,7 @@ class DataDiriController extends Controller
 
     public function store(Request $request)
     {
-        $this->validateRequest($request, true);
+        $this->validateRequest($request);
 
         DB::transaction(function () use ($request) {
 
@@ -30,15 +30,18 @@ class DataDiriController extends Controller
                 abort(400, 'Pegawai sudah memiliki data diri.');
             }
 
-            $fotoPath = $request->file('foto')->store('foto_diri', 'public');
+            $fotoPath = null;
+            if ($request->hasFile('foto')) {
+                $fotoPath = $request->file('foto')->store('foto_diri', 'public');
+            }
 
             $dataDiri = DataDiri::create([
-                'no_hp' => $request->no_hp,
-                'alamat' => $request->alamat,
-                'tempat_lahir' => $request->tempat_lahir,
-                'tgl_lahir' => $request->tgl_lahir,
+                'no_hp'         => $request->no_hp,
+                'alamat'        => $request->alamat,
+                'tempat_lahir'  => $request->tempat_lahir,
+                'tgl_lahir'     => $request->tgl_lahir,
                 'jenis_kelamin' => $request->jenis_kelamin,
-                'foto' => $fotoPath,
+                'foto'          => $fotoPath, // null OK
             ]);
 
             $pegawai->update([
@@ -86,7 +89,7 @@ class DataDiriController extends Controller
             ->route('pegawai.data_diri.index')
             ->with('success', 'Data Diri berhasil diperbarui.');
     }
-    
+
     private function pegawaiLogin(): Pegawai
     {
         return Pegawai::with('dataDiri')
@@ -94,15 +97,15 @@ class DataDiriController extends Controller
             ->firstOrFail();
     }
 
-    private function validateRequest(Request $request, bool $isCreate = false): void
+    private function validateRequest(Request $request): void
     {
         $request->validate([
-            'no_hp' => ['required', 'string', 'max:15', 'regex:/^\d+$/'],
-            'alamat' => ['required', 'string', 'max:500'],
-            'tempat_lahir' => ['required', 'string', 'max:100'],
-            'tgl_lahir' => ['required', 'date'],
+            'no_hp'         => ['required', 'string', 'max:15', 'regex:/^\d+$/'],
+            'alamat'        => ['required', 'string', 'max:500'],
+            'tempat_lahir'  => ['required', 'string', 'max:100'],
+            'tgl_lahir'     => ['required', 'date'],
             'jenis_kelamin' => ['required', 'in:L,P'],
-            'foto' => [$isCreate ? 'required' : 'nullable', 'image', 'max:2048'],
+            'foto'          => ['nullable', 'image', 'max:2048'],
         ], [
             'no_hp.regex' => 'No HP harus berupa angka saja.',
         ]);

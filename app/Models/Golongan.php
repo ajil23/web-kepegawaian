@@ -10,6 +10,5 @@ class Golongan extends Model
 
     protected $fillable = [
         'nama_golongan',
-        'aktif',
     ];
 }

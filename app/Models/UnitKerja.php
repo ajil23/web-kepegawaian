@@ -10,6 +10,5 @@ class UnitKerja extends Model
 
     protected $fillable = [
         'nama_unitkerja',
-        'aktif',
     ];
 }
