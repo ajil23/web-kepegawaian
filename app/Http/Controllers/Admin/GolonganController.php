@@ -18,12 +18,10 @@ class GolonganController extends Controller
     {
         $request->validate([
             'nama_golongan' => 'required|string|max:255',
-            'aktif' => 'required|string|max:50',
         ]);
 
         Golongan::create([
             'nama_golongan' => $request->nama_golongan,
-            'aktif' => $request->aktif,
         ]);
 
         return redirect()->back()->with('success', 'Golongan berhasil ditambahkan.');
@@ -33,13 +31,11 @@ class GolonganController extends Controller
     {
         $request->validate([
             'nama_golongan' => 'required|string|max:255',
-            'aktif' => 'required|string|max:50',
         ]);
 
         $golongan = Golongan::findOrFail($id);
         $golongan->update([
             'nama_golongan' => $request->nama_golongan,
-            'aktif' => $request->aktif,
         ]);
 
         return redirect()->back()->with('success', 'Golongan berhasil diperbarui.');

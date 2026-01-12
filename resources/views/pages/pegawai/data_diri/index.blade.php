@@ -17,8 +17,8 @@ $isEmpty = !$dataDiri;
         <h3 class="font-bold text-slate-800">Profil Saya</h3>
 
         <button id="btnAction"
-            type="button"
-            class="px-4 py-2 text-sm rounded-lg text-white bg-green-800 hover:bg-green-900">
+            type="submit"
+            class="px-4 py-2 text-sm rounded-lg text-white bg-green-800">
             Edit
         </button>
 
@@ -118,11 +118,13 @@ $isEmpty = !$dataDiri;
     const fotoInput = document.getElementById('fotoInput');
     const fotoHint = document.getElementById('fotoHint');
 
-    let editMode = false; // SELALU mulai dari view mode
+    let editMode = false;
 
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
         if (!editMode) {
-            // MASUK MODE EDIT
+            // MODE EDIT
+            e.preventDefault();
+
             inputs.forEach(el => el.removeAttribute('readonly'));
             selects.forEach(el => el.removeAttribute('disabled'));
 
@@ -135,12 +137,10 @@ $isEmpty = !$dataDiri;
             });
 
             btn.textContent = 'Simpan';
-            btn.type = 'submit';
-
             editMode = true;
         } else {
-            // SUBMIT FORM
-            form.submit();
+            // MODE SIMPAN ✅
+            form.submit(); // <<< INI YANG SEBELUMNYA TIDAK ADA
         }
     });
 

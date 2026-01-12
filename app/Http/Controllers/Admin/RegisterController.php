@@ -31,9 +31,9 @@ class RegisterController extends Controller
     public function create()
     {
         return view('pages.admin.register.create', [
-            'unitkerja' => UnitKerja::where('aktif', 'aktif')->orderBy('nama_unitkerja')->get(),
-            'golongan'  => Golongan::where('aktif', 'aktif')->orderBy('nama_golongan')->get(),
-            'jabatan'   => Jabatan::where('aktif', 'aktif')->orderBy('nama_jabatan')->get(),
+            'unitkerja' => UnitKerja::all(),
+            'golongan'  => Golongan::all(),
+            'jabatan'   => Jabatan::all(),
         ]);
     }
 
@@ -119,9 +119,9 @@ class RegisterController extends Controller
         $pegawai = Pegawai::where('user_id', $user->id)->first();
 
         // Ensure these queries return collections
-        $unitkerja = UnitKerja::where('aktif', 'aktif')->orderBy('nama_unitkerja')->get();
-        $golongan = Golongan::where('aktif', 'aktif')->orderBy('nama_golongan')->get();
-        $jabatan = Jabatan::where('aktif', 'aktif')->orderBy('nama_jabatan')->get();
+        $unitkerja = UnitKerja::all();
+        $golongan = Golongan::all();
+        $jabatan = Jabatan::all();
 
         return view('pages.admin.register.edit', [
             'user'      => $user,
@@ -144,9 +144,9 @@ class RegisterController extends Controller
             'catatan_verifikasi' => 'nullable|string',
 
             // pegawai
-            'unitkerja_id' => 'required|exists:ref_unitkerja,id,aktif,aktif',
-            'golongan_id'  => 'required|exists:ref_golongan,id,aktif,aktif',
-            'jabatan_id'   => 'required|exists:ref_jabatan,id,aktif,aktif',
+            'unitkerja_id' => 'required|exists:ref_unitkerja,id',
+            'golongan_id'  => 'required|exists:ref_golongan,id',
+            'jabatan_id'   => 'required|exists:ref_jabatan,id',
             'status_pegawai' => 'required|string',
         ]);
 

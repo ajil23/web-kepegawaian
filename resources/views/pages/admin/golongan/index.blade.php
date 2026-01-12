@@ -28,7 +28,6 @@
                     <tr class="text-slate-500 uppercase text-xs">
                         <th class="pb-3 text-left">No</th>
                         <th class="pb-3 text-left">Nama Golongan</th>
-                        <th class="pb-3 text-left">Status</th>
                         <th class="pb-3 text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -39,17 +38,6 @@
                         <td class="py-4">{{ $i + 1 }}</td>
                         <td class="py-4 font-medium text-slate-800">
                             {{ $item->nama_golongan }}
-                        </td>
-                        <td class="py-4">
-                            @if ($item->aktif === 'aktif')
-                            <span class="px-3 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full">
-                                Aktif
-                            </span>
-                            @else
-                            <span class="px-3 py-1 text-xs font-semibold bg-red-100 text-red-600 rounded-full">
-                                Tidak Aktif
-                            </span>
-                            @endif
                         </td>
                         <td class="py-4 text-right">
                             <button type="button" onclick="openEditModal({{ $item->id }}, '{{ $item->nama_golongan }}', '{{ $item->aktif }}')" class="text-slate-600 hover:text-green-800 font-medium transition">
@@ -114,27 +102,6 @@
                     @enderror
                 </div>
 
-                {{-- STATUS --}}
-                <div>
-                    <label class="block text-sm font-medium text-slate-700">
-                        Status
-                    </label>
-
-                    <select name="aktif"
-                        class="w-full mt-1 px-4 py-2 rounded-lg border
-                        {{ $errors->has('aktif')
-                            ? 'border-red-500 focus:ring-red-500'
-                            : 'border-slate-200 focus:ring-green-800' }}" required>
-                        <option value="">-- Pilih Status --</option>
-                        <option value="aktif" {{ old('aktif') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                        <option value="nonaktif" {{ old('aktif') == 'nonaktif' ? 'selected' : '' }}>Tidak Aktif</option>
-                    </select>
-
-                    @error('aktif')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
             </div>
 
             {{-- FOOTER --}}
@@ -182,18 +149,6 @@
                         id="edit_nama"
                         name="nama_golongan"
                         class="w-full mt-1 px-4 py-2 rounded-lg border border-slate-200 focus:ring-green-800">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-slate-700">
-                        Status
-                    </label>
-                    <select name="aktif"
-                        id="edit_aktif"
-                        class="w-full mt-1 px-4 py-2 rounded-lg border border-slate-200 focus:ring-green-800">
-                        <option value="aktif">Aktif</option>
-                        <option value="nonaktif">Tidak Aktif</option>
-                    </select>
                 </div>
 
             </div>
@@ -275,7 +230,6 @@
         const modal = document.getElementById('modalEdit');
 
         document.getElementById('edit_nama').value = nama;
-        document.getElementById('edit_aktif').value = aktif;
 
         document.getElementById('formEdit').action =
             `/admin/golongan/${id}`;
