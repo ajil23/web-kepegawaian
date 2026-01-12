@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('ref_unitkerja', function (Blueprint $table) {
             $table->id();
             $table->string('nama_unitkerja');
+            $table->string('aktif');
             $table->timestamps();
         });
     }

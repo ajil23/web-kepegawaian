@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Golongan;
 use App\Models\Jabatan;
 use App\Models\Pegawai;
-use App\Models\RiwayatKepegawaian;
 use App\Models\UnitKerja;
 use App\Models\User;
 use App\Services\LogService;
@@ -59,7 +58,6 @@ class RegisterController extends Controller
         DB::beginTransaction();
 
         try {
-            // 1️⃣ Simpan user
             $user = User::create([
                 'name' => $request->name,
                 'nip' => $request->nip,
@@ -70,7 +68,6 @@ class RegisterController extends Controller
                 'catatan_verifikasi' => $request->catatan_verifikasi,
             ]);
 
-            // 2️⃣ Simpan pegawai
             Pegawai::create([
                 'user_id' => $user->id,
                 'unitkerja_id' => $request->unitkerja_id,
@@ -78,16 +75,6 @@ class RegisterController extends Controller
                 'jabatan_id' => $request->jabatan_id,
                 'status_pegawai' => $request->status_pegawai,
                 'data_diri_id' => null,
-            ]);
-
-            // 3️⃣ Simpan riwayat kepegawaian (AUTO)
-            RiwayatKepegawaian::create([
-                'user_id' => $user->id,
-                'unitkerja_id' => $request->unitkerja_id,
-                'golongan_id' => $request->golongan_id,
-                'jabatan_id' => $request->jabatan_id,
-                'tgl_mulai' => $user->created_at->toDateString(),
-                'tgl_selesai' => null,
             ]);
 
             DB::commit();
@@ -152,7 +139,6 @@ class RegisterController extends Controller
         DB::beginTransaction();
 
         try {
-            // 1️⃣ Update user
             $user->update([
                 'name' => $request->name,
                 'nip' => $request->nip,
@@ -162,7 +148,6 @@ class RegisterController extends Controller
                 'catatan_verifikasi' => $request->catatan_verifikasi,
             ]);
 
-            // 2️⃣ Ambil pegawai lama (jika ada)
             $pegawai = Pegawai::where('user_id', $user->id)->first();
 
             $isMutasi = false;
@@ -174,7 +159,6 @@ class RegisterController extends Controller
                     $pegawai->jabatan_id   != $request->jabatan_id;
             }
 
-            // 3️⃣ Update pegawai
             Pegawai::updateOrCreate(
                 ['user_id' => $user->id],
                 [
@@ -184,27 +168,6 @@ class RegisterController extends Controller
                     'status_pegawai' => $request->status_pegawai,
                 ]
             );
-
-            // 4️⃣ Jika mutasi → kelola riwayat kepegawaian
-            if ($isMutasi) {
-
-                // Tutup riwayat aktif lama
-                RiwayatKepegawaian::where('user_id', $user->id)
-                    ->whereNull('tgl_selesai')
-                    ->update([
-                        'tgl_selesai' => now()->toDateString(),
-                    ]);
-
-                // Tambah riwayat baru
-                RiwayatKepegawaian::create([
-                    'user_id' => $user->id,
-                    'unitkerja_id' => $request->unitkerja_id,
-                    'golongan_id' => $request->golongan_id,
-                    'jabatan_id' => $request->jabatan_id,
-                    'tgl_mulai' => now()->toDateString(),
-                    'tgl_selesai' => null,
-                ]);
-            }
 
             DB::commit();
 
