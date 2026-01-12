@@ -14,11 +14,42 @@ use Illuminate\Support\Facades\DB;
 
 class PegawaiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pegawai = Pegawai::with(['user', 'unitkerja', 'golongan', 'jabatan'])->get();
+        $pegawai = Pegawai::with(['user', 'unitkerja', 'golongan', 'jabatan'])
+            ->when($request->filled('q'), function ($query) use ($request) {
+                $q = $request->q;
+
+                $query->where(function ($sub) use ($q) {
+
+                    // Cari dari tabel users
+                    $sub->whereHas('user', function ($u) use ($q) {
+                        $u->where('name', 'like', "%{$q}%")
+                            ->orWhere('nip', 'like', "%{$q}%")
+                            ->orWhere('email', 'like', "%{$q}%");
+                    })
+
+                        // Unit Kerja
+                        ->orWhereHas('unitkerja', function ($u) use ($q) {
+                            $u->where('nama_unitkerja', 'like', "%{$q}%");
+                        })
+
+                        // Golongan
+                        ->orWhereHas('golongan', function ($g) use ($q) {
+                            $g->where('nama_golongan', 'like', "%{$q}%");
+                        })
+
+                        // Jabatan
+                        ->orWhereHas('jabatan', function ($j) use ($q) {
+                            $j->where('nama_jabatan', 'like', "%{$q}%");
+                        });
+                });
+            })
+            ->get();
+
         return view('pages.admin.pegawai.index', compact('pegawai'));
     }
+
 
     public function create()
     {

@@ -150,26 +150,6 @@
                     <p id="detail_status_pegawai" class="mt-1 text-slate-800">-</p>
                 </div>
 
-                <!-- Data Diri -->
-                <div class="col-span-2 mt-4">
-                    <h4 class="font-semibold text-slate-700 mb-3 pb-2 border-b">Data Diri</h4>
-                </div>
-                <div><strong>No HP:</strong>
-                    <p id="detail_no_hp" class="mt-1 text-slate-800">-</p>
-                </div>
-                <div><strong>Alamat:</strong>
-                    <p id="detail_alamat" class="mt-1 text-slate-800">-</p>
-                </div>
-                <div><strong>Tempat Lahir:</strong>
-                    <p id="detail_tempat_lahir" class="mt-1 text-slate-800">-</p>
-                </div>
-                <div><strong>Tanggal Lahir:</strong>
-                    <p id="detail_tgl_lahir" class="mt-1 text-slate-800">-</p>
-                </div>
-                <div><strong>Jenis Kelamin:</strong>
-                    <p id="detail_jenis_kelamin" class="mt-1 text-slate-800">-</p>
-                </div>
-
             </div>
         </div>
 

@@ -71,10 +71,6 @@
 <div class="bg-white rounded-xl shadow-sm border p-6 mb-8">
     <div class="flex justify-between items-center mb-4">
         <h3 class="font-bold text-gray-800">Status Tugas Keseluruhan</h3>
-
-        <select class="border rounded-lg text-sm px-3 py-2">
-            <option>Semua Unit</option>
-        </select>
     </div>
 
     <div class="flex justify-center items-center h-64">
@@ -133,7 +129,7 @@
                         </div>
                     </td>
                     <td class="px-6 py-3 text-center">
-                        <a href="#" class="text-green-600 hover:underline">Detail</a>
+                        <a href="{{ route('kph.penugasan.index') }}" class="text-green-600 hover:underline">Detail</a>
                     </td>
                 </tr>
                 @endforeach

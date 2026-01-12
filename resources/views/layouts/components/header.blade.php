@@ -13,12 +13,26 @@
 
         {{-- SEARCH --}}
         <div class="hidden md:block relative">
-            <input type="text" placeholder="Cari..."
-                class="px-4 py-1.5 text-sm bg-gray-100 rounded-full focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none w-64">
+            <form action="{{
+            auth()->user()->role === 'admin'
+                ? route('admin.pegawai.index')
+                : (auth()->user()->role === 'kph'
+                    ? route('kph.pegawai.index')
+                    : route('pegawai.direktori.index'))
+                }}" method="GET">
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ request('q') }}"
+                    placeholder="Cari pegawai..."
+                    class="px-4 py-1.5 text-sm bg-gray-100 rounded-full focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none w-64">
+            </form>
         </div>
 
-        {{-- NOTIFICATION --}}
-        <button class="p-2 text-gray-400 hover:text-gray-600 border-r pr-4">
+        @if(auth()->user()->role === 'admin')
+        {{-- NOTIFICATION ADMIN --}}
+        <a href="{{ route('admin.notifikasi.index') }}"
+            class="p-2 text-gray-400 hover:text-gray-600 border-r pr-4 inline-flex items-center">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11
@@ -29,7 +43,25 @@
                     m6 0v1a3 3 0 11-6 0v-1m6 0H9">
                 </path>
             </svg>
-        </button>
+        </a>
+        @endif
+
+        @if(auth()->user()->role === 'pegawai')
+        {{-- NOTIFICATION PEGAWAI --}}
+        <a href="{{ route('pegawai.notifikasi.index') }}"
+            class="p-2 text-gray-400 hover:text-gray-600 border-r pr-4 inline-flex items-center">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11
+                    a6.002 6.002 0 00-4-5.659V5
+                    a2 2 0 10-4 0v.341
+                    C7.67 6.165 6 8.388 6 11v3.159
+                    c0 .538-.214 1.055-.595 1.436L4 17h5
+                    m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                </path>
+            </svg>
+        </a>
+        @endif
 
         {{-- USER DROPDOWN --}}
         <div class="relative" id="user-profile">

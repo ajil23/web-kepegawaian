@@ -48,14 +48,6 @@
                         <p class="font-medium text-slate-800">{{ $pegawai->user->nip ?? '-' }}</p>
                     </div>
                     <div>
-                        <label class="text-xs text-slate-500 uppercase">Email</label>
-                        <p class="font-medium text-slate-800">{{ $pegawai->user->email ?? '-' }}</p>
-                    </div>
-                    <div>
-                        <label class="text-xs text-slate-500 uppercase">Role</label>
-                        <p class="font-medium text-slate-800">{{ $pegawai->user->role ?? '-' }}</p>
-                    </div>
-                    <div>
                         <label class="text-xs text-slate-500 uppercase">Status Akun</label>
                         <p class="font-medium text-slate-800">
                             @if ($pegawai->user->status_akun === 'aktif')
@@ -72,49 +64,112 @@
                 </div>
             </div>
 
-            <!-- Data Kepegawaian -->
+            <!-- DATA KEPEGAWAIAN -->
             <div class="bg-slate-50 rounded-lg p-6">
-                <h4 class="font-semibold text-slate-700 mb-4 pb-2 border-b">Data Kepegawaian</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-xs text-slate-500 uppercase">ID Pegawai</label>
-                        <p class="font-medium text-slate-800">{{ $pegawai->id ?? '-' }}</p>
-                    </div>
-                    <div>
-                        <label class="text-xs text-slate-500 uppercase">Unit Kerja</label>
-                        <p class="font-medium text-slate-800">{{ $pegawai->unitkerja->nama_unitkerja ?? '-' }}</p>
-                    </div>
-                    <div>
-                        <label class="text-xs text-slate-500 uppercase">Golongan</label>
-                        <p class="font-medium text-slate-800">{{ $pegawai->golongan->nama_golongan ?? '-' }}</p>
-                    </div>
-                    <div>
-                        <label class="text-xs text-slate-500 uppercase">Jabatan</label>
-                        <p class="font-medium text-slate-800">{{ $pegawai->jabatan->nama_jabatan ?? '-' }}</p>
-                    </div>
-                    <div>
-                        <label class="text-xs text-slate-500 uppercase">Status Pegawai</label>
-                        <p>
-                            @if ($pegawai->status_pegawai === 'aktif')
-                            <span class="px-2 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full">
-                                Aktif
-                            </span>
-                            @else
-                            <span class="px-2 py-1 text-xs font-semibold bg-red-100 text-red-600 rounded-full">
-                                Nonaktif
-                            </span>
-                            @endif
-                        </p>
-                    </div>
-                    <div>
-                        <label class="text-xs text-slate-500 uppercase">Tanggal Dibuat</label>
-                        <p class="font-medium text-slate-800">{{ $pegawai->created_at ? \Carbon\Carbon::parse($pegawai->created_at)->locale('id_ID')->isoFormat('D MMMM YYYY HH:mm') : '-' }}</p>
-                    </div>
-                    <div>
-                        <label class="text-xs text-slate-500 uppercase">Tanggal Update</label>
-                        <p class="font-medium text-slate-800">{{ $pegawai->updated_at ? \Carbon\Carbon::parse($pegawai->updated_at)->locale('id_ID')->isoFormat('D MMMM YYYY HH:mm') : '-' }}</p>
-                    </div>
+
+                <div class="flex justify-between items-center mb-4 pb-2 border-b">
+                    <h4 class="font-semibold text-slate-700">Data Kepegawaian</h4>
+
+                    <button id="btnEditKepegawaian"
+                        type="button"
+                        class="px-4 py-2 text-sm rounded-lg text-white bg-green-800 hover:bg-green-900">
+                        Edit
+                    </button>
                 </div>
+
+                <form id="formKepegawaian"
+                    method="POST"
+                    action="{{ route('pegawai.data_kepegawaian.update', $pegawai->id) }}">
+
+                    @csrf
+                    @method('PUT')
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <!-- Unit Kerja -->
+                        <div>
+                            <label class="text-xs text-slate-500 uppercase mb-1 block">Unit Kerja</label>
+
+                            <!-- READ -->
+                            <p class="text-slate-800 font-medium view-mode">
+                                {{ $pegawai->unitkerja->nama_unitkerja ?? '-' }}
+                            </p>
+
+                            <!-- EDIT -->
+                            <select name="unitkerja_id"
+                                class="edit-mode hidden w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white text-sm">
+                                @foreach ($unitkerjaList as $unit)
+                                <option value="{{ $unit->id }}"
+                                    @selected($pegawai->unitkerja_id == $unit->id)>
+                                    {{ $unit->nama_unitkerja }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Golongan -->
+                        <div>
+                            <label class="text-xs text-slate-500 uppercase mb-1 block">Golongan</label>
+
+                            <p class="text-slate-800 font-medium view-mode">
+                                {{ $pegawai->golongan->nama_golongan ?? '-' }}
+                            </p>
+
+                            <select name="golongan_id"
+                                class="edit-mode hidden w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white text-sm">
+                                @foreach ($golonganList as $gol)
+                                <option value="{{ $gol->id }}"
+                                    @selected($pegawai->golongan_id == $gol->id)>
+                                    {{ $gol->nama_golongan }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Jabatan -->
+                        <div>
+                            <label class="text-xs text-slate-500 uppercase mb-1 block">Jabatan</label>
+
+                            <p class="text-slate-800 font-medium view-mode">
+                                {{ $pegawai->jabatan->nama_jabatan ?? '-' }}
+                            </p>
+
+                            <select name="jabatan_id"
+                                class="edit-mode hidden w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white text-sm">
+                                @foreach ($jabatanList as $jab)
+                                <option value="{{ $jab->id }}"
+                                    @selected($pegawai->jabatan_id == $jab->id)>
+                                    {{ $jab->nama_jabatan }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Status Pegawai -->
+                        <div>
+                            <label class="text-xs text-slate-500 uppercase mb-1 block">Status Pegawai</label>
+
+                            <p class="view-mode">
+                                @if ($pegawai->status_pegawai === 'aktif')
+                                <span class="px-2 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full">
+                                    Aktif
+                                </span>
+                                @else
+                                <span class="px-2 py-1 text-xs font-semibold bg-red-100 text-red-600 rounded-full">
+                                    Nonaktif
+                                </span>
+                                @endif
+                            </p>
+
+                            <select name="status_pegawai"
+                                class="edit-mode hidden w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white text-sm">
+                                <option value="aktif" @selected($pegawai->status_pegawai === 'aktif')>Aktif</option>
+                                <option value="nonaktif" @selected($pegawai->status_pegawai === 'nonaktif')>Nonaktif</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </form>
             </div>
 
             <!-- Data Diri -->
@@ -146,14 +201,6 @@
                             {{ $pegawai->dataDiri->jenis_kelamin == 'L' ? 'Laki-laki' : ($pegawai->dataDiri->jenis_kelamin == 'P' ? 'Perempuan' : '-') }}
                         </p>
                     </div>
-                    <div>
-                        <label class="text-xs text-slate-500 uppercase">Tanggal Dibuat</label>
-                        <p class="font-medium text-slate-800">{{ $pegawai->dataDiri->created_at ? \Carbon\Carbon::parse($pegawai->dataDiri->created_at)->locale('id_ID')->isoFormat('D MMMM YYYY HH:mm') : '-' }}</p>
-                    </div>
-                    <div>
-                        <label class="text-xs text-slate-500 uppercase">Tanggal Update</label>
-                        <p class="font-medium text-slate-800">{{ $pegawai->dataDiri->updated_at ? \Carbon\Carbon::parse($pegawai->dataDiri->updated_at)->locale('id_ID')->isoFormat('D MMMM YYYY HH:mm') : '-' }}</p>
-                    </div>
                 </div>
                 @else
                 <p class="text-slate-500 italic">Data diri belum dilengkapi</p>
@@ -171,3 +218,29 @@
 
 
 @endsection
+
+@push('scripts')
+<script>
+    const btn = document.getElementById('btnEditKepegawaian');
+    const form = document.getElementById('formKepegawaian');
+
+    const viewEls = document.querySelectorAll('.view-mode');
+    const editEls = document.querySelectorAll('.edit-mode');
+
+    let editMode = false;
+
+    btn.addEventListener('click', () => {
+        if (!editMode) {
+            // KE MODE EDIT
+            viewEls.forEach(el => el.classList.add('hidden'));
+            editEls.forEach(el => el.classList.remove('hidden'));
+
+            btn.textContent = 'Simpan';
+            btn.type = 'submit';
+            editMode = true;
+        } else {
+            form.submit();
+        }
+    });
+</script>
+@endpush
