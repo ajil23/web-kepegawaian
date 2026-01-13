@@ -7,9 +7,10 @@
         <div class="flex items-center justify-between h-16 px-6 bg-slate-50 border-b border-slate-200">
             <div class="flex items-center gap-3">
                 <img
-                    src="{{ asset('assets/images/ava.png') }}"
+                    src="{{ asset('assets/images/avatar.png') }}"
                     alt="Logo"
-                    class="h-15 w-auto">
+                    class="h-11 w-auto">
+                <span class="text-xl font-semibold text-slate-700">SIPANDA-KPH</span>
             </div>
 
             <button onclick="toggleSidebar()" class="lg:hidden">

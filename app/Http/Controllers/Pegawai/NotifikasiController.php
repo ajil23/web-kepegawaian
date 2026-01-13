@@ -11,12 +11,14 @@ use Illuminate\Http\Request;
 
 class NotifikasiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // Pegawai login
         $pegawai = Pegawai::where('user_id', auth()->id())->firstOrFail();
 
-        $tugas = Tugas::with([
+        $search = $request->input('q');
+
+        $tugasQuery = Tugas::with([
             'penugasan' => function ($q) use ($pegawai) {
                 $q->where('pegawai_id', $pegawai->id);
             }
@@ -24,19 +26,31 @@ class NotifikasiController extends Controller
             ->whereHas('penugasan', function ($q) use ($pegawai) {
                 $q->where('pegawai_id', $pegawai->id);
             })
-            ->where('created_at', '>=', now()->subDays(2))
-            ->orderBy('deadline', 'asc')
-            ->get();
+            ->where('created_at', '>=', now()->subDays(2));
 
-        $catatanKegiatan = CatatanKegiatan::where('pegawai_id', $pegawai->id)
+        $catatanKegiatanQuery = CatatanKegiatan::where('pegawai_id', $pegawai->id)
             ->whereIn('status', ['setuju', 'tolak'])
-            ->where('created_at', '>=', now()->subDays(2))
-            ->orderBy('created_at', 'desc')
-            ->get();
+            ->where('created_at', '>=', now()->subDays(2));
+
+        // Apply search filter if provided
+        if ($search) {
+            $tugasQuery->where(function ($query) use ($search) {
+                $query->where('judul', 'LIKE', "%{$search}%")
+                      ->orWhere('deskripsi', 'LIKE', "%{$search}%");
+            });
+
+            $catatanKegiatanQuery->where(function ($query) use ($search) {
+                $query->where('judul', 'LIKE', "%{$search}%")
+                      ->orWhere('deskripsi', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $tugas = $tugasQuery->orderBy('deadline', 'asc')->get();
+        $catatanKegiatan = $catatanKegiatanQuery->orderBy('created_at', 'desc')->get();
 
         return view(
             'pages.pegawai.notifikasi.index',
-            compact('tugas', 'catatanKegiatan')
+            compact('tugas', 'catatanKegiatan', 'search')
         );
     }
 }

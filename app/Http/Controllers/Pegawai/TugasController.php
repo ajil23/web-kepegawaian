@@ -10,18 +10,28 @@ use Illuminate\Http\Request;
 
 class TugasController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $pegawai = Pegawai::where('user_id', auth()->id())->firstOrFail();
 
-        $tugas = Tugas::with([
+        $tugasQuery = Tugas::with([
             'penugasan.pegawai.user' // ambil semua pegawai
         ])
             ->whereHas('penugasan', function ($q) use ($pegawai) {
                 $q->where('pegawai_id', $pegawai->id); // filter tugas saya
-            })
-            ->orderBy('deadline', 'asc')
-            ->get();
+            });
+
+        // Apply search filter if provided
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $tugasQuery->where(function ($query) use ($q) {
+                $query->where('judul', 'like', "%{$q}%")
+                      ->orWhere('deskripsi', 'like', "%{$q}%")
+                      ->orWhere('prioritas', 'like', "%{$q}%");
+            });
+        }
+
+        $tugas = $tugasQuery->orderBy('deadline', 'asc')->get();
 
         return view('pages.pegawai.tugas.index', compact('tugas'));
     }

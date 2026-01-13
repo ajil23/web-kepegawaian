@@ -8,9 +8,17 @@ use Illuminate\Http\Request;
 
 class GolonganController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $golongan = Golongan::all();
+        $golonganQuery = Golongan::query();
+
+        // Apply search filter if provided
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $golonganQuery->where('nama_golongan', 'like', "%{$q}%");
+        }
+
+        $golongan = $golonganQuery->get();
         return view('pages.admin.golongan.index', compact('golongan'));
     }
 

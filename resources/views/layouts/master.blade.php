@@ -4,7 +4,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Web Kepegawaian</title>
+    @php
+        // Determine search route and placeholder based on current page
+        $currentRoute = Route::currentRouteName();
+        $searchRoute = '#';
+        $searchPlaceholder = 'Cari...';
+
+        if (str_contains($currentRoute, 'admin.pegawai')) {
+            $searchRoute = route('admin.pegawai.index');
+            $searchPlaceholder = 'Cari pegawai...';
+        } elseif (str_contains($currentRoute, 'kph.pegawai')) {
+            $searchRoute = route('kph.pegawai.index');
+            $searchPlaceholder = 'Cari pegawai...';
+        } elseif (str_contains($currentRoute, 'pegawai.direktori')) {
+            $searchRoute = route('pegawai.direktori.index');
+            $searchPlaceholder = 'Cari pegawai...';
+        } elseif (str_contains($currentRoute, 'admin.notifikasi')) {
+            $searchRoute = route('admin.notifikasi.index');
+            $searchPlaceholder = 'Cari notifikasi...';
+        } elseif (str_contains($currentRoute, 'pegawai.notifikasi')) {
+            $searchRoute = route('pegawai.notifikasi.index');
+            $searchPlaceholder = 'Cari notifikasi...';
+        } elseif (str_contains($currentRoute, 'admin.register')) {
+            $searchRoute = route('admin.register.index');
+            $searchPlaceholder = 'Cari user...';
+        } elseif (str_contains($currentRoute, 'admin.penugasan')) {
+            $searchRoute = route('admin.penugasan.index');
+            $searchPlaceholder = 'Cari penugasan...';
+        } elseif (str_contains($currentRoute, 'pegawai.tugas')) {
+            $searchRoute = route('pegawai.tugas.index');
+            $searchPlaceholder = 'Cari tugas...';
+        } elseif (str_contains($currentRoute, 'pegawai.catatan_kegiatan')) {
+            $searchRoute = route('pegawai.catatan_kegiatan.index');
+            $searchPlaceholder = 'Cari catatan kegiatan...';
+        } elseif (str_contains($currentRoute, 'pegawai.data_diri')) {
+            $searchRoute = route('pegawai.data_diri.index');
+            $searchPlaceholder = 'Cari data diri...';
+        } elseif (str_contains($currentRoute, 'pegawai.data_kepegawaian')) {
+            $searchRoute = route('pegawai.data_kepegawaian.index');
+            $searchPlaceholder = 'Cari data kepegawaian...';
+        } elseif (str_contains($currentRoute, 'admin.riwayat_kepegawaian')) {
+            $searchRoute = route('admin.riwayat_kepegawaian.index');
+            $searchPlaceholder = 'Cari riwayat kepegawaian...';
+        } elseif (str_contains($currentRoute, 'admin.golongan')) {
+            $searchRoute = route('admin.index.golongan');
+            $searchPlaceholder = 'Cari golongan...';
+        } elseif (str_contains($currentRoute, 'admin.jabatan')) {
+            $searchRoute = route('admin.index.jabatan');
+            $searchPlaceholder = 'Cari jabatan...';
+        } elseif (str_contains($currentRoute, 'admin.unitkerja')) {
+            $searchRoute = route('admin.index.unitkerja');
+            $searchPlaceholder = 'Cari unit kerja...';
+        } elseif (str_contains($currentRoute, 'kph.penugasan')) {
+            $searchRoute = route('kph.penugasan.index');
+            $searchPlaceholder = 'Cari penugasan...';
+        } elseif (str_contains($currentRoute, 'kph.riwayat_kepegawaian')) {
+            $searchRoute = route('kph.riwayat_kepegawaian.index');
+            $searchPlaceholder = 'Cari riwayat kepegawaian...';
+        } elseif (str_contains($currentRoute, 'kph.catatan_kegiatan')) {
+            $searchRoute = route('kph.catatan_kegiatan.index');
+            $searchPlaceholder = 'Cari catatan kegiatan...';
+        } elseif (str_contains($currentRoute, 'admin.logs')) {
+            $searchRoute = route('admin.logs.index');
+            $searchPlaceholder = 'Cari log...';
+        }
+    @endphp
+    <title>@yield('title', 'Dashboard | Web Kepegawaian')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
