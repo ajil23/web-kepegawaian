@@ -8,14 +8,31 @@ use Illuminate\Http\Request;
 
 class CatatanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $catatan = CatatanKegiatan::with([
+        $catatanQuery = CatatanKegiatan::with([
             'pegawai.user',
             'pegawai.unitkerja',
             'pegawai.jabatan',
         ])
-            ->whereIn('status', ['ajukan', 'setuju', 'tolak'])
+            ->whereIn('status', ['ajukan', 'setuju', 'tolak']);
+
+        // Apply search filter if provided
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $catatanQuery->where(function ($query) use ($q) {
+                $query->where('judul', 'like', "%{$q}%")
+                      ->orWhere('deskripsi', 'like', "%{$q}%")
+                      ->orWhere('status', 'like', "%{$q}%")
+                      ->orWhereHas('pegawai.user', function ($userQuery) use ($q) {
+                          $userQuery->where('name', 'like', "%{$q}%")
+                                   ->orWhere('email', 'like', "%{$q}%")
+                                   ->orWhere('nip', 'like', "%{$q}%");
+                      });
+            });
+        }
+
+        $catatan = $catatanQuery
             ->orderByRaw("
                 FIELD(status, 'ajukan', 'setuju', 'tolak')
             ")

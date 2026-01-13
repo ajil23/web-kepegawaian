@@ -8,9 +8,17 @@ use Illuminate\Http\Request;
 
 class JabatanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $jabatan = Jabatan::all();
+        $jabatanQuery = Jabatan::query();
+
+        // Apply search filter if provided
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $jabatanQuery->where('nama_jabatan', 'like', "%{$q}%");
+        }
+
+        $jabatan = $jabatanQuery->get();
         return view('pages.admin.jabatan.index', compact('jabatan'));
     }
 

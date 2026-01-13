@@ -9,20 +9,37 @@ use Illuminate\Http\Request;
 
 class NotifAdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $userBaru = User::where('status_akun', 'nonaktif')
-            ->where('created_at', '>=', now()->subDays(2))
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $search = $request->input('q'); // Changed to 'q' to match header
 
-        $perubahanDataDiri = DataDiri::where('updated_at', '>=', now()->subDays(2))
-            ->orderBy('updated_at', 'desc')
-            ->get();
+        $userBaruQuery = User::where('status_akun', 'nonaktif')
+            ->where('created_at', '>=', now()->subDays(2));
+
+        $perubahanDataDiriQuery = DataDiri::where('updated_at', '>=', now()->subDays(2))
+            ->with(['pegawai.user']);
+
+        // Apply search filter if provided
+        if ($search) {
+            $userBaruQuery->where(function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%")
+                      ->orWhere('email', 'LIKE', "%{$search}%")
+                      ->orWhere('nip', 'LIKE', "%{$search}%");
+            });
+
+            $perubahanDataDiriQuery->whereHas('pegawai.user', function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%")
+                      ->orWhere('email', 'LIKE', "%{$search}%")
+                      ->orWhere('nip', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $userBaru = $userBaruQuery->orderBy('created_at', 'desc')->get();
+        $perubahanDataDiri = $perubahanDataDiriQuery->orderBy('updated_at', 'desc')->get();
 
         return view(
             'pages.admin.notifikasi.index',
-            compact('userBaru', 'perubahanDataDiri')
+            compact('userBaru', 'perubahanDataDiri', 'search')
         );
     }
 }

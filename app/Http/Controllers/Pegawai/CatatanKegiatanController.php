@@ -9,11 +9,25 @@ use Illuminate\Http\Request;
 
 class CatatanKegiatanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $pegawai = Pegawai::where('user_id', auth()->id())->firstOrFail();
 
-        $catatan = CatatanKegiatan::where('pegawai_id', $pegawai->id)
+        $catatanQuery = CatatanKegiatan::where('pegawai_id', $pegawai->id);
+
+        // Apply search filter if provided
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $catatanQuery->where(function ($query) use ($q) {
+                $query->where('judul', 'like', "%{$q}%")
+                      ->orWhere('deskripsi', 'like', "%{$q}%")
+                      ->orWhere('status', 'like', "%{$q}%")
+                      ->orWhere('periode_bulan', 'like', "%{$q}%")
+                      ->orWhere('periode_tahun', 'like', "%{$q}%");
+            });
+        }
+
+        $catatan = $catatanQuery
             ->orderByDesc('periode_tahun')
             ->orderByDesc('periode_bulan')
             ->get();

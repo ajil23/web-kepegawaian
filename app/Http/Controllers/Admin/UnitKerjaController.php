@@ -8,9 +8,17 @@ use Illuminate\Http\Request;
 
 class UnitKerjaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $unitkerja = UnitKerja::all();
+        $unitkerjaQuery = UnitKerja::query();
+
+        // Apply search filter if provided
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $unitkerjaQuery->where('nama_unitkerja', 'like', "%{$q}%");
+        }
+
+        $unitkerja = $unitkerjaQuery->get();
         return view('pages.admin.unitkerja.index', compact('unitkerja'));
     }
 

@@ -3,27 +3,28 @@
 namespace App\Http\Controllers\KPH;
 
 use App\Http\Controllers\Controller;
-use App\Models\CatatanKegiatan;
 use App\Models\Pegawai;
+use App\Models\RiwayatKepegawaian;
 use Illuminate\Http\Request;
 
-class CatatanKegiatanController extends Controller
+class RiwayatKepegawaianController extends Controller
 {
     public function index(Request $request)
     {
-        $catatanQuery = CatatanKegiatan::with([
+        $riwayatQuery = RiwayatKepegawaian::with([
             'pegawai.user',
             'pegawai.unitkerja',
+            'pegawai.golongan',
             'pegawai.jabatan',
         ]);
 
         // Apply search filter if provided
         if ($request->filled('q')) {
             $q = $request->q;
-            $catatanQuery->where(function ($query) use ($q) {
-                $query->where('judul', 'like', "%{$q}%")
-                      ->orWhere('deskripsi', 'like', "%{$q}%")
-                      ->orWhere('status', 'like', "%{$q}%")
+            $riwayatQuery->where(function ($query) use ($q) {
+                $query->where('jenis_mutasi', 'like', "%{$q}%")
+                      ->orWhere('keterangan', 'like', "%{$q}%")
+                      ->orWhere('catatan', 'like', "%{$q}%")
                       ->orWhereHas('pegawai.user', function ($userQuery) use ($q) {
                           $userQuery->where('name', 'like', "%{$q}%")
                                    ->orWhere('email', 'like', "%{$q}%")
@@ -32,11 +33,10 @@ class CatatanKegiatanController extends Controller
             });
         }
 
-        $catatan = $catatanQuery
+        $riwayat = $riwayatQuery
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('pages.kph.catatan_kegiatan.index', compact('catatan'));
+        return view('pages.kph.riwayat_kepegawaian.index', compact('riwayat'));
     }
-
 }

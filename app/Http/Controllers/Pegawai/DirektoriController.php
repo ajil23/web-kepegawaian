@@ -11,26 +11,39 @@ class DirektoriController extends Controller
 {
     public function index(Request $request)
     {
-        $pegawai = Pegawai::with([
+        $pegawaiQuery = Pegawai::with([
             'user',
             'unitkerja',
             'golongan',
             'jabatan'
         ])
-            ->whereHas('user', function ($query) use ($request) {
+            ->whereHas('user', function ($query) {
                 $query->where('role', 'pegawai')
                     ->where('status_akun', 'aktif');
+            });
 
-                // 🔍 SEARCH
-                if ($request->filled('q')) {
-                    $query->where(function ($q2) use ($request) {
-                        $q2->where('name', 'like', '%' . $request->q . '%')
-                            ->orWhere('nip', 'like', '%' . $request->q . '%')
-                            ->orWhere('email', 'like', '%' . $request->q . '%');
-                    });
-                }
-            })
-            ->get();
+        // Apply search filter if provided
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $pegawaiQuery->where(function ($query) use ($q) {
+                $query->whereHas('user', function ($userQuery) use ($q) {
+                    $userQuery->where('name', 'like', "%{$q}%")
+                             ->orWhere('nip', 'like', "%{$q}%")
+                             ->orWhere('email', 'like', "%{$q}%");
+                })
+                ->orWhereHas('unitkerja', function ($unitQuery) use ($q) {
+                    $unitQuery->where('nama_unitkerja', 'like', "%{$q}%");
+                })
+                ->orWhereHas('golongan', function ($golonganQuery) use ($q) {
+                    $golonganQuery->where('nama_golongan', 'like', "%{$q}%");
+                })
+                ->orWhereHas('jabatan', function ($jabatanQuery) use ($q) {
+                    $jabatanQuery->where('nama_jabatan', 'like', "%{$q}%");
+                });
+            });
+        }
+
+        $pegawai = $pegawaiQuery->get();
 
         return view('pages.pegawai.direktori.index', compact('pegawai'));
     }

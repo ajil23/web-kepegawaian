@@ -21,9 +21,18 @@ class RegisterController extends Controller
     {
         $this->logService = $logService;
     }
-    public function index()
+    public function index(Request $request)
     {
-        $user = User::all();
+        $user = User::when($request->filled('q'), function ($query) use ($request) {
+            $q = $request->q;
+            $query->where(function ($sub) use ($q) {
+                $sub->where('name', 'like', "%{$q}%")
+                    ->orWhere('nip', 'like', "%{$q}%")
+                    ->orWhere('email', 'like', "%{$q}%")
+                    ->orWhere('role', 'like', "%{$q}%");
+            });
+        })->get();
+
         return view('pages.admin.register.index', compact('user'));
     }
 

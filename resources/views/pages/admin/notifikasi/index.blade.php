@@ -15,7 +15,37 @@
 
     <!-- Header -->
     <div class="p-6 border-b border-slate-100">
-        <h3 class="font-bold text-slate-800">Data Notifikasi (2 Hari Terakhir)</h3>
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h3 class="font-bold text-slate-800">Data Notifikasi (2 Hari Terakhir)</h3>
+
+            <!-- Search Form -->
+            <form method="GET" action="{{ route('admin.notifikasi.index') }}" class="w-full sm:w-auto">
+                <div class="relative">
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ request('q') }}"
+                        placeholder="Cari notifikasi..."
+                        class="w-full sm:w-64 px-4 py-2 pl-10 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition"
+                    >
+                    <div class="absolute left-3 top-2.5 text-slate-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    @if(request('q'))
+                        <a href="{{ route('admin.notifikasi.index') }}"
+                           class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </a>
+                    @endif
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- Content -->
@@ -33,12 +63,16 @@
                     'created_at'  => $user->created_at,
                     'type'        => 'user',
                     'status'      => $user->status_akun,
+                    'user_info'   => $user, // Include user info for search filtering
                     // arahkan ke halaman manajemen user admin
                     'link'        => route('admin.register.index'),
                 ]);
             }
 
             foreach ($perubahanDataDiri as $dataDiri) {
+                $pegawai = $dataDiri->pegawai;
+                $user = $pegawai ? $pegawai->user : null;
+
                 $notifications->push([
                     'id'          => $dataDiri->id,
                     'judul'       => 'Perubahan Data Diri',
@@ -47,13 +81,36 @@
                     'created_at'  => $dataDiri->updated_at,
                     'type'        => 'data_diri',
                     'status'      => null,
+                    'user_info'   => $user, // Include user info for search filtering
                     // arahkan ke halaman verifikasi / data diri
                     'link'        => route('admin.riwayat_kepegawaian.index'),
                 ]);
             }
 
+            // If search is applied, filter notifications based on user info
+            if(request('q')) {
+                $searchTerm = strtolower(request('q'));
+                $notifications = $notifications->filter(function($notification) use ($searchTerm) {
+                    if($notification['user_info']) {
+                        $user = $notification['user_info'];
+                        return strpos(strtolower($user->name ?? ''), $searchTerm) !== false ||
+                               strpos(strtolower($user->email ?? ''), $searchTerm) !== false ||
+                               strpos(strtolower($user->nip ?? ''), $searchTerm) !== false;
+                    }
+                    return true; // Keep notification if no user info
+                });
+            }
+
             $notifications = $notifications->sortByDesc('created_at')->values();
         @endphp
+
+        <!-- Search Results Info -->
+        @if(request('q'))
+        <div class="mb-4 p-3 bg-blue-50 text-blue-700 rounded-lg text-sm">
+            Menemukan {{ $notifications->count() }} notifikasi dari pencarian "{{ request('q') }}"
+            <a href="{{ route('admin.notifikasi.index') }}" class="ml-2 underline">Hapus pencarian</a>
+        </div>
+        @endif
 
         @forelse($notifications as $notification)
         <div class="flex items-start gap-4 p-4 border border-slate-100 rounded-lg hover:bg-slate-50 transition">
@@ -126,7 +183,11 @@
         </div>
         @empty
         <div class="text-center text-slate-500 py-10">
-            Tidak ada notifikasi dalam 2 hari terakhir
+            @if(request('q'))
+                Tidak ditemukan notifikasi yang cocok dengan pencarian "{{ request('q') }}"
+            @else
+                Tidak ada notifikasi dalam 2 hari terakhir
+            @endif
         </div>
         @endforelse
 

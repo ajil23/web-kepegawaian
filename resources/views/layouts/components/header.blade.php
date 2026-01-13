@@ -13,19 +13,78 @@
 
         {{-- SEARCH --}}
         <div class="hidden md:block relative">
-            <form action="{{
-            auth()->user()->role === 'admin'
-                ? route('admin.pegawai.index')
-                : (auth()->user()->role === 'kph'
-                    ? route('kph.pegawai.index')
-                    : route('pegawai.direktori.index'))
-                }}" method="GET">
+            @php
+                // Determine search route and placeholder based on current page
+                $currentRoute = Route::currentRouteName();
+                $searchRoute = '#';
+                $searchPlaceholder = 'Cari...';
+
+                if (str_contains($currentRoute, 'admin.pegawai')) {
+                    $searchRoute = route('admin.pegawai.index');
+                    $searchPlaceholder = 'Cari pegawai...';
+                } elseif (str_contains($currentRoute, 'kph.pegawai')) {
+                    $searchRoute = route('kph.pegawai.index');
+                    $searchPlaceholder = 'Cari pegawai...';
+                } elseif (str_contains($currentRoute, 'pegawai.direktori')) {
+                    $searchRoute = route('pegawai.direktori.index');
+                    $searchPlaceholder = 'Cari pegawai...';
+                } elseif (str_contains($currentRoute, 'admin.notifikasi')) {
+                    $searchRoute = route('admin.notifikasi.index');
+                    $searchPlaceholder = 'Cari notifikasi...';
+                } elseif (str_contains($currentRoute, 'pegawai.notifikasi')) {
+                    $searchRoute = route('pegawai.notifikasi.index');
+                    $searchPlaceholder = 'Cari notifikasi...';
+                } elseif (str_contains($currentRoute, 'admin.register')) {
+                    $searchRoute = route('admin.register.index');
+                    $searchPlaceholder = 'Cari user...';
+                } elseif (str_contains($currentRoute, 'admin.penugasan')) {
+                    $searchRoute = route('admin.penugasan.index');
+                    $searchPlaceholder = 'Cari penugasan...';
+                } elseif (str_contains($currentRoute, 'pegawai.tugas')) {
+                    $searchRoute = route('pegawai.tugas.index');
+                    $searchPlaceholder = 'Cari tugas...';
+                } elseif (str_contains($currentRoute, 'pegawai.catatan_kegiatan')) {
+                    $searchRoute = route('pegawai.catatan_kegiatan.index');
+                    $searchPlaceholder = 'Cari catatan kegiatan...';
+                } elseif (str_contains($currentRoute, 'pegawai.data_diri')) {
+                    $searchRoute = route('pegawai.data_diri.index');
+                    $searchPlaceholder = 'Cari data diri...';
+                } elseif (str_contains($currentRoute, 'pegawai.data_kepegawaian')) {
+                    $searchRoute = route('pegawai.data_kepegawaian.index');
+                    $searchPlaceholder = 'Cari data kepegawaian...';
+                } elseif (str_contains($currentRoute, 'admin.riwayat_kepegawaian')) {
+                    $searchRoute = route('admin.riwayat_kepegawaian.index');
+                    $searchPlaceholder = 'Cari riwayat kepegawaian...';
+                } elseif (str_contains($currentRoute, 'admin.golongan')) {
+                    $searchRoute = route('admin.index.golongan');
+                    $searchPlaceholder = 'Cari golongan...';
+                } elseif (str_contains($currentRoute, 'admin.jabatan')) {
+                    $searchRoute = route('admin.index.jabatan');
+                    $searchPlaceholder = 'Cari jabatan...';
+                } elseif (str_contains($currentRoute, 'admin.unitkerja')) {
+                    $searchRoute = route('admin.index.unitkerja');
+                    $searchPlaceholder = 'Cari unit kerja...';
+                } elseif (str_contains($currentRoute, 'kph.penugasan')) {
+                    $searchRoute = route('kph.penugasan.index');
+                    $searchPlaceholder = 'Cari penugasan...';
+                } elseif (str_contains($currentRoute, 'kph.riwayat_kepegawaian')) {
+                    $searchRoute = route('kph.riwayat_kepegawaian.index');
+                    $searchPlaceholder = 'Cari riwayat kepegawaian...';
+                } elseif (str_contains($currentRoute, 'kph.catatan_kegiatan')) {
+                    $searchRoute = route('kph.catatan_kegiatan.index');
+                    $searchPlaceholder = 'Cari catatan kegiatan...';
+                } elseif (str_contains($currentRoute, 'admin.logs')) {
+                    $searchRoute = route('admin.logs.index');
+                    $searchPlaceholder = 'Cari log...';
+                }
+            @endphp
+            <form action="{{ $searchRoute }}" method="GET">
                 <input
                     type="text"
                     name="q"
                     value="{{ request('q') }}"
-                    placeholder="Cari pegawai..."
-                    class="px-4 py-1.5 text-sm bg-gray-100 rounded-full focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none w-64">
+                    placeholder="{{ $searchPlaceholder }}"
+                    class="px-4 py-2.5 text-sm bg-gray-100 rounded-full focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none w-96">
             </form>
         </div>
 
@@ -33,7 +92,7 @@
         {{-- NOTIFICATION ADMIN --}}
         <a href="{{ route('admin.notifikasi.index') }}"
             class="p-2 text-gray-400 hover:text-gray-600 border-r pr-4 inline-flex items-center">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11
                     a6.002 6.002 0 00-4-5.659V5
@@ -44,13 +103,11 @@
                 </path>
             </svg>
         </a>
-        @endif
-
-        @if(auth()->user()->role === 'pegawai')
+        @elseif(auth()->user()->role === 'pegawai')
         {{-- NOTIFICATION PEGAWAI --}}
         <a href="{{ route('pegawai.notifikasi.index') }}"
             class="p-2 text-gray-400 hover:text-gray-600 border-r pr-4 inline-flex items-center">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11
                     a6.002 6.002 0 00-4-5.659V5
