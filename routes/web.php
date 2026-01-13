@@ -50,13 +50,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/pegawai/{pegawai}', [PegawaiController::class, 'update'])->name('pegawai.update');
     Route::delete('/pegawai/{pegawai}', [PegawaiController::class, 'delete'])->name('pegawai.delete');
 
-    Route::get('/riwayat-kepegawaian', [RiwayatKepegawaianController::class, 'index'])->name('riwayat_kepegawaian.index');
-    Route::get('/riwayat-kepegawaian/create', [RiwayatKepegawaianController::class, 'create'])->name('riwayat_kepegawaian.create');
-    Route::post('/riwayat-kepegawaian', [RiwayatKepegawaianController::class, 'store'])->name('riwayat_kepegawaian.store');
-    Route::get('/riwayat-kepegawaian/{riwayat}/edit', [RiwayatKepegawaianController::class, 'edit'])->name('riwayat_kepegawaian.edit');
-    Route::put('/riwayat-kepegawaian/{riwayat}', [RiwayatKepegawaianController::class, 'update'])->name('riwayat_kepegawaian.update');
-    Route::delete('/riwayat-kepegawaian/{riwayat}', [RiwayatKepegawaianController::class, 'delete'])->name('riwayat_kepegawaian.delete');
-
     Route::get('/penugasan', [PenugasanController::class, 'index'])->name('penugasan.index');
     Route::get('/penugasan/create', [PenugasanController::class, 'create'])->name('penugasan.create');
     Route::post('/penugasan', [PenugasanController::class, 'store'])->name('penugasan.store');
@@ -120,8 +113,6 @@ Route::middleware(['auth', 'role:kph'])->prefix('kph')->name('kph.')->group(func
     Route::get('/pegawai/{id}', [KphPegawaiController::class, 'show'])->name('pegawai.show');
 
     Route::get('/penugasan', [KphPenugasanController::class, 'index'])->name('penugasan.index');
-
-    Route::get('/riwayat-kepegawaian', [KphRiwayatKepegawaianController::class, 'index'])->name('riwayat_kepegawaian.index');
 
     Route::get('/catatan-kegiatan', [CatatanController::class, 'index'])->name('catatan_kegiatan.index');
 });
