@@ -17,6 +17,7 @@ class Tugas extends Model
         'deskripsi',
         'deadline',
         'prioritas',
+        'template',
     ];
 
     public function user()

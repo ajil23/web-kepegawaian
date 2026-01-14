@@ -33,6 +33,7 @@
                         <th class="pb-3 text-left">Deadline</th>
                         <th class="pb-3 text-left">Prioritas</th>
                         <th class="pb-3 text-left">Dibuat Oleh</th>
+                        <th class="pb-3 text-left">Template</th>
                         <th class="pb-3 text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -71,6 +72,18 @@
 
                         <td class="py-4">
                             {{ $item->user->name ?? '-' }}
+                        </td>
+
+                        <td class="py-4">
+                            @if ($item->template)
+                            <a href="{{ asset('storage/' . $item->template) }}"
+                                target="_blank"
+                                class="text-blue-600 hover:underline text-sm">
+                                Lihat Template
+                            </a>
+                            @else
+                            <span class="text-slate-400 text-sm">-</span>
+                            @endif
                         </td>
 
                         <!-- Aksi -->
@@ -177,48 +190,114 @@
 
         document.getElementById('detailJudul').innerText = tugas.judul;
 
-        let html = `<h4 class="font-semibold text-slate-700 mb-3">Daftar Pegawai</h4>
-            <table class="w-full text-sm">
-                <thead>
+        let html = ``;
+
+        html += `
+            <div class="mb-5">
+                <strong class="text-sm text-slate-700 block mb-2">Template Tugas</strong>
+                ${
+                    tugas.template
+                        ? `<a href="/storage/${tugas.template}" target="_blank"
+                            class="inline-flex items-center gap-2 px-3 py-2 text-sm
+                                   text-blue-700 bg-blue-50 rounded-lg hover:bg-blue-100">
+                            Unduh Template
+                          </a>`
+                        : `<span class="text-slate-400 text-sm">Tidak ada template</span>`
+                }
+            </div>
+        `;
+
+        html += `
+            <h4 class="font-semibold text-slate-700 mb-3">Daftar Pegawai</h4>
+            <table class="w-full text-sm border rounded-lg overflow-hidden">
+                <thead class="bg-slate-50">
                     <tr class="text-slate-500 text-xs uppercase">
-                        <th class="pb-2 text-left">Nama Pegawai</th>
-                        <th class="pb-2 text-left">Status</th>
-                        <th class="pb-2 text-left">Catatan</th>
+                        <th class="px-3 py-2 text-left">Nama</th>
+                        <th class="px-3 py-2 text-left">Status</th>
+                        <th class="px-3 py-2 text-left">Catatan</th>
                     </tr>
                 </thead>
-                <tbody>`;
+                <tbody class="divide-y">
+        `;
 
         if (tugas.penugasan.length > 0) {
             tugas.penugasan.forEach(p => {
 
-                let statusBadge = `<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600"> - </span>`;
+                let badge =
+                    p.status === 'selesai'
+                        ? `<span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">Selesai</span>`
+                        : p.status === 'proses'
+                        ? `<span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full">Proses</span>`
+                        : `<span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">Baru</span>`;
 
-                if (p.status === 'baru') {
-                    statusBadge = `<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700"> Baru </span>`;
-                } else if (p.status === 'proses') {
-                    statusBadge = `<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-700">Proses</span>`; 
-                } else if (p.status === 'selesai') {
-                    statusBadge = `<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-green-800 text-green-900">Selesai</span>`;
+                html += `
+                    <tr>
+                        <td class="px-3 py-2">${p.pegawai?.user?.name ?? '-'}</td>
+                        <td class="px-3 py-2">${badge}</td>
+                        <td class="px-3 py-2">${p.catatan_kepegawaian ?? '-'}</td>
+                    </tr>
+                `;
+
+                html += `
+                    <tr>
+                        <td colspan="3" class="px-3 py-3 bg-slate-50">
+                            <strong class="text-sm block mb-2">Laporan</strong>
+                            ${
+                                p.laporan
+                                    ? `<a href="/storage/${p.laporan}" target="_blank"
+                                        class="inline-flex items-center gap-2 px-3 py-2 text-sm
+                                               text-blue-700 bg-blue-50 rounded-lg hover:bg-blue-100">
+                                        Lihat Laporan
+                                      </a>`
+                                    : `<span class="text-slate-400 text-sm">Belum ada laporan</span>`
+                            }
+                        </td>
+                    </tr>
+                `;
+
+                let fotoHtml = '';
+                if (p.foto_progres) {
+                    try {
+                        const fotos = JSON.parse(p.foto_progres);
+                        fotos.forEach(f => {
+                            fotoHtml += `
+                                <img src="/storage/${f}"
+                                     class="w-full h-20 object-cover rounded border"
+                                     alt="Foto Progres">
+                            `;
+                        });
+                    } catch (e) {}
                 }
 
-                html += `<tr>
-                    <td class="py-2">${p.pegawai?.user?.name ?? '-'}</td>
-                    <td class="py-2">${statusBadge}</td>
-                    <td class="py-2">${p.catatan_kepegawaian ?? '-'}</td>
-                </tr>`;
+                html += `
+                    <tr>
+                        <td colspan="3" class="px-3 py-3">
+                            <strong class="text-sm block mb-2">Foto Progres</strong>
+                            ${
+                                fotoHtml
+                                    ? `<div class="grid grid-cols-4 gap-2">${fotoHtml}</div>`
+                                    : `<span class="text-slate-400 text-sm">Belum ada foto progres</span>`
+                            }
+                        </td>
+                    </tr>
+                `;
             });
         } else {
-            html += `<tr>
-                <td colspan="3" class="py-3 text-center text-slate-500">
-                    Belum ada pegawai
-                </td>
-            </tr>`;
+            html += `
+                <tr>
+                    <td colspan="3" class="px-3 py-4 text-center text-slate-500">
+                        Belum ada pegawai
+                    </td>
+                </tr>
+            `;
         }
 
-        html += `</tbody></table>`;
+        html += `
+                </tbody>
+            </table>
+        `;
 
         document.getElementById('detailBody').innerHTML = html;
-
         modalToggle('modalDetail', true);
     }
 
@@ -226,25 +305,10 @@
         modalToggle('modalDetail', false);
     }
 
-    function openDeleteModal(id, nama) {
-        document.getElementById('deleteNama').innerText = nama;
-        document.getElementById('formDelete').action = `/admin/penugasan/${id}`;
-        modalToggle('modalDelete', true);
-    }
-
-    function closeDeleteModal() {
-        modalToggle('modalDelete', false);
-    }
-
     function modalToggle(id, show) {
         const modal = document.getElementById(id);
-        if (show) {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        } else {
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-        }
+        modal.classList.toggle('hidden', !show);
+        modal.classList.toggle('flex', show);
     }
 </script>
 @endpush

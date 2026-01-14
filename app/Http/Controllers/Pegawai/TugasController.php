@@ -26,8 +26,8 @@ class TugasController extends Controller
             $q = $request->q;
             $tugasQuery->where(function ($query) use ($q) {
                 $query->where('judul', 'like', "%{$q}%")
-                      ->orWhere('deskripsi', 'like', "%{$q}%")
-                      ->orWhere('prioritas', 'like', "%{$q}%");
+                    ->orWhere('deskripsi', 'like', "%{$q}%")
+                    ->orWhere('prioritas', 'like', "%{$q}%");
             });
         }
 
@@ -36,31 +36,56 @@ class TugasController extends Controller
         return view('pages.pegawai.tugas.index', compact('tugas'));
     }
 
-
     public function updateStatus(Request $request, Penugasan $penugasan)
     {
-        $request->validate([
-            'status' => 'required|in:baru,proses,selesai',
-            'catatan_kepegawaian' => 'nullable|string',
-        ]);
-
         if ($penugasan->pegawai->user_id !== auth()->id()) {
             abort(403);
         }
+
+        $request->validate([
+            'status' => 'required|in:baru,proses,selesai',
+            'catatan_kepegawaian' => 'nullable|string',
+
+            // file (opsional, sesuai status)
+            'foto_progres.*' => 'nullable|image|max:2048',
+            'laporan' => 'nullable|file|mimes:pdf,doc,docx|max:4096',
+        ]);
 
         $data = [
             'status' => $request->status,
         ];
 
-        if ($request->filled('catatan_kepegawaian')) {
-            $data['catatan_kepegawaian'] = $request->catatan_kepegawaian;
+        /* ================= PROSES ================= */
+        if ($request->status === 'proses' && $request->hasFile('foto_progres')) {
+
+            $paths = [];
+
+            foreach ($request->file('foto_progres') as $file) {
+                $paths[] = $file->store('progres_tugas', 'public');
+            }
+
+            // simpan sebagai JSON (TIDAK mengubah blade)
+            $data['foto_progres'] = json_encode($paths);
+        }
+
+        /* ================= SELESAI ================= */
+        if ($request->status === 'selesai') {
+
+            if ($request->filled('catatan_kepegawaian')) {
+                $data['catatan_kepegawaian'] = $request->catatan_kepegawaian;
+            }
+
+            if ($request->hasFile('laporan')) {
+                $data['laporan'] = $request->file('laporan')
+                    ->store('laporan_tugas', 'public');
+            }
         }
 
         $penugasan->update($data);
 
         return response()->json([
             'success' => true,
-            'status' => $penugasan->status,
+            'status'  => $penugasan->status,
         ]);
     }
 }

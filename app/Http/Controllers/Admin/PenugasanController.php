@@ -8,29 +8,35 @@ use App\Models\Penugasan;
 use App\Models\Tugas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PenugasanController extends Controller
 {
     public function index(Request $request)
     {
-        $tugasQuery = Tugas::with(['user', 'penugasan.pegawai.user']);
+        $tugasQuery = Tugas::with([
+            'user',
+            'penugasan.pegawai.user'
+        ]);
 
-        // Apply search filter if provided
         if ($request->filled('q')) {
             $q = $request->q;
             $tugasQuery->where(function ($query) use ($q) {
                 $query->where('judul', 'like', "%{$q}%")
-                      ->orWhere('deskripsi', 'like', "%{$q}%")
-                      ->orWhere('prioritas', 'like', "%{$q}%")
-                      ->orWhereHas('user', function ($userQuery) use ($q) {
-                          $userQuery->where('name', 'like', "%{$q}%")
-                                   ->orWhere('email', 'like', "%{$q}%")
-                                   ->orWhere('nip', 'like', "%{$q}%");
-                      });
+                    ->orWhere('deskripsi', 'like', "%{$q}%")
+                    ->orWhere('prioritas', 'like', "%{$q}%")
+                    ->orWhereHas('user', function ($userQuery) use ($q) {
+                        $userQuery->where('name', 'like', "%{$q}%")
+                            ->orWhere('email', 'like', "%{$q}%")
+                            ->orWhere('nip', 'like', "%{$q}%");
+                    });
             });
         }
 
-        $tugas = $tugasQuery->orderBy('created_at', 'desc')->get();
+        $tugas = $tugasQuery
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('pages.admin.penugasan.index', compact('tugas'));
     }
 
@@ -54,15 +60,20 @@ class PenugasanController extends Controller
             'prioritas'    => 'required|string',
             'pegawai_id'   => 'required|array|min:1',
             'pegawai_id.*' => 'exists:pegawai,id',
+            'template'     => 'required|file|mimes:pdf,doc,docx|max:2048',
         ]);
 
         DB::transaction(function () use ($request) {
+
+            $templatePath = $request->file('template')
+                ->store('template_tugas', 'public');
 
             $tugas = Tugas::create([
                 'judul'     => $request->judul,
                 'deskripsi' => $request->deskripsi,
                 'deadline'  => $request->deadline,
                 'prioritas' => $request->prioritas,
+                'template'  => $templatePath,
                 'user_id'   => auth()->id(),
             ]);
 
@@ -102,9 +113,24 @@ class PenugasanController extends Controller
             'prioritas'    => 'required|string',
             'pegawai_id'   => 'required|array|min:1',
             'pegawai_id.*' => 'exists:pegawai,id',
+            'template'     => 'nullable|file|mimes:pdf,doc,docx|max:2048',
         ]);
 
         DB::transaction(function () use ($request, $penugasan) {
+
+            if ($request->hasFile('template')) {
+
+                // hapus template lama
+                if ($penugasan->template && Storage::disk('public')->exists($penugasan->template)) {
+                    Storage::disk('public')->delete($penugasan->template);
+                }
+
+                // simpan template baru
+                $templatePath = $request->file('template')
+                    ->store('template_tugas', 'public');
+
+                $penugasan->template = $templatePath;
+            }
 
             $penugasan->update([
                 'judul'     => $request->judul,
@@ -121,7 +147,10 @@ class PenugasanController extends Controller
 
             foreach ($pegawaiIds as $pegawaiId) {
                 Penugasan::firstOrCreate(
-                    ['tugas_id' => $penugasan->id, 'pegawai_id' => $pegawaiId],
+                    [
+                        'tugas_id'   => $penugasan->id,
+                        'pegawai_id' => $pegawaiId,
+                    ],
                     ['status' => 'baru']
                 );
             }
