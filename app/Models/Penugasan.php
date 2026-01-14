@@ -16,6 +16,8 @@ class Penugasan extends Model
         'tugas_id',
         'status',
         'catatan_kepegawaian',
+        'laporan',
+        'foto_progres',
     ];
 
     public function pegawai()

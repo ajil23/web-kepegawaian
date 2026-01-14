@@ -16,7 +16,7 @@
     </div>
 
     <!-- Form -->
-    <form method="POST" action="{{ route('admin.penugasan.update', $penugasan->id) }}" class="p-6 space-y-6">
+    <form method="POST" action="{{ route('admin.penugasan.update', $penugasan->id) }}" enctype="multipart/form-data" class="p-6 space-y-6">
         @csrf
         @method('PUT')
 
@@ -69,6 +69,39 @@
                 <x-input-error :messages="$errors->get('prioritas')" class="mt-1" />
             </div>
 
+            <!-- Template -->
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-slate-700 mb-1">
+                    Template Tugas
+                </label>
+
+                @if ($penugasan->template)
+                <div class="mb-2">
+                    <a href="{{ asset('storage/' . $penugasan->template) }}"
+                        target="_blank"
+                        class="text-blue-600 text-sm hover:underline">
+                        📄 Lihat Template Saat Ini
+                    </a>
+                </div>
+                @endif
+
+                <input type="file"
+                    name="template"
+                    accept=".pdf,.doc,.docx"
+                    class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-lg file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100">
+
+                <p class="text-xs text-slate-500 mt-1">
+                    Kosongkan jika tidak ingin mengganti template
+                </p>
+
+                <x-input-error :messages="$errors->get('template')" class="mt-1" />
+            </div>
+
             <!-- Pegawai -->
             <div class="md:col-span-2" id="pegawai-wrapper">
                 <label class="block text-sm font-medium text-slate-700 mb-1">
@@ -86,10 +119,10 @@
                         class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm">
                         <option value="">-- Pilih Pegawai --</option>
                         @foreach ($pegawai as $item)
-                            <option value="{{ $item->id }}"
-                                @selected($pegawaiId == $item->id)>
-                                {{ $item->user->name }}
-                            </option>
+                        <option value="{{ $item->id }}"
+                            @selected($pegawaiId==$item->id)>
+                            {{ $item->user->name }}
+                        </option>
                         @endforeach
                     </select>
                     <button type="button" onclick="this.parentNode.remove()"
@@ -106,9 +139,9 @@
                         class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm">
                         <option value="">-- Pilih Pegawai --</option>
                         @foreach ($pegawai as $item)
-                            <option value="{{ $item->id }}">
-                                {{ $item->user->name }}
-                            </option>
+                        <option value="{{ $item->id }}">
+                            {{ $item->user->name }}
+                        </option>
                         @endforeach
                     </select>
                     <button type="button" onclick="this.parentNode.remove()"
