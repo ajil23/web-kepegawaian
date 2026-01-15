@@ -38,20 +38,46 @@ $isEmpty = !$dataDiri;
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-            <!-- FOTO -->
-            <div class="flex flex-col items-center gap-4">
-                <img id="fotoPreview"
-                    src="{{ $dataDiri?->foto ? asset('storage/'.$dataDiri->foto) : asset('images/avatar.png') }}"
-                    class="w-40 h-40 rounded-full object-cover border border-slate-300">
+            <!-- FOTO & KARTU IDENTITAS -->
+            <div class="flex flex-col items-center gap-6">
 
-                <input type="file" name="foto" id="fotoInput" accept="image/*"
-                    onchange="previewImage(event)"
-                    class="hidden">
+                <!-- FOTO -->
+                <div class="flex flex-col items-center gap-4">
+                    <img id="fotoPreview"
+                        src="{{ $dataDiri?->foto ? asset('storage/'.$dataDiri->foto) : asset('images/avatar.png') }}"
+                        class="w-40 h-40 rounded-full object-cover border border-slate-300">
 
-                <span id="fotoHint" class="text-sm text-slate-400">
-                    Klik Edit untuk mengubah foto
-                </span>
+                    <input type="file" name="foto" id="fotoInput" accept="image/*"
+                        onchange="previewImage(event)"
+                        class="hidden">
+
+                    <span id="fotoHint" class="text-sm text-slate-400">
+                        Klik Edit untuk mengubah foto
+                    </span>
+                </div>
+
+                <!-- KARTU IDENTITAS -->
+                <div class="flex flex-col items-center gap-3">
+                    <img id="kartuIdentitasPreview"
+                        src="{{ $dataDiri?->kartu_identitas
+                ? asset('storage/'.$dataDiri->kartu_identitas)
+                : asset('images/no-image.png') }}"
+                        class="w-64 h-40 rounded-lg object-cover border border-slate-300">
+
+                    <input type="file"
+                        name="kartu_identitas"
+                        id="kartuIdentitasInput"
+                        accept="image/*"
+                        onchange="previewKartuIdentitas(event)"
+                        class="hidden">
+
+                    <span id="kartuIdentitasHint" class="text-sm text-slate-400">
+                        Klik Edit untuk mengunggah kartu identitas
+                    </span>
+                </div>
+
             </div>
+
 
             <!-- FORM -->
             <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -115,21 +141,27 @@ $isEmpty = !$dataDiri;
     const form = document.getElementById('profileForm');
     const inputs = document.querySelectorAll('input, textarea');
     const selects = document.querySelectorAll('select');
+
     const fotoInput = document.getElementById('fotoInput');
     const fotoHint = document.getElementById('fotoHint');
+
+    const kartuIdentitasInput = document.getElementById('kartuIdentitasInput');
+    const kartuIdentitasHint = document.getElementById('kartuIdentitasHint');
 
     let editMode = false;
 
     btn.addEventListener('click', (e) => {
         if (!editMode) {
-            // MODE EDIT
             e.preventDefault();
 
             inputs.forEach(el => el.removeAttribute('readonly'));
             selects.forEach(el => el.removeAttribute('disabled'));
 
             fotoInput.classList.remove('hidden');
+            kartuIdentitasInput.classList.remove('hidden');
+
             fotoHint.classList.add('hidden');
+            kartuIdentitasHint.classList.add('hidden');
 
             inputs.forEach(el => {
                 el.classList.remove('bg-slate-50');
@@ -139,8 +171,7 @@ $isEmpty = !$dataDiri;
             btn.textContent = 'Simpan';
             editMode = true;
         } else {
-            // MODE SIMPAN ✅
-            form.submit(); // <<< INI YANG SEBELUMNYA TIDAK ADA
+            form.submit();
         }
     });
 
@@ -148,6 +179,14 @@ $isEmpty = !$dataDiri;
         const reader = new FileReader();
         reader.onload = () => {
             document.getElementById('fotoPreview').src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function previewKartuIdentitas(event) {
+        const reader = new FileReader();
+        reader.onload = () => {
+            document.getElementById('kartuIdentitasPreview').src = reader.result;
         };
         reader.readAsDataURL(event.target.files[0]);
     }

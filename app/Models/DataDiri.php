@@ -18,6 +18,7 @@ class DataDiri extends Model
         'tgl_lahir',
         'jenis_kelamin',
         'foto',
+        'kartu_identitas',
     ];
 
     public function pegawai()

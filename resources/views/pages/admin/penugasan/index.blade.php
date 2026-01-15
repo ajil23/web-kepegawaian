@@ -224,11 +224,11 @@
             tugas.penugasan.forEach(p => {
 
                 let badge =
-                    p.status === 'selesai'
-                        ? `<span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">Selesai</span>`
-                        : p.status === 'proses'
-                        ? `<span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full">Proses</span>`
-                        : `<span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">Baru</span>`;
+                    p.status === 'selesai' ?
+                    `<span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">Selesai</span>` :
+                    p.status === 'proses' ?
+                    `<span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full">Proses</span>` :
+                    `<span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">Baru</span>`;
 
                 html += `
                     <tr>

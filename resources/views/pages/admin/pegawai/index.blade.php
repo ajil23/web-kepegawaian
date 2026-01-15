@@ -76,6 +76,14 @@
                         </td>
 
                         <td class="py-4 text-right whitespace-nowrap">
+                            <button type="button"
+                                onclick="openDetailModal({{ $item->id }})"
+                                class="text-slate-600 hover:text-blue-700 font-medium transition">
+                                Detail
+                            </button>
+
+                            <span class="mx-2 text-slate-300">|</span>
+
                             <a href="{{ route('admin.pegawai.edit', $item->id) }}"
                                 class="text-slate-600 hover:text-green-800 font-medium transition">
                                 Edit
@@ -136,6 +144,150 @@
     </div>
 </div>
 
+<!-- MODAL DETAIL -->
+<div id="modalDetail"
+    class="fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-500 bg-opacity-50">
+
+    <div class="bg-white rounded-xl shadow-xl w-11/12 max-w-5xl max-h-[95vh] flex flex-col overflow-y-auto">
+
+        <!-- HEADER -->
+        <div class="relative px-6 py-4 border-b border-gray-200">
+            <h3 class="text-xl font-bold text-gray-900 text-center">
+                Detail Pegawai
+            </h3>
+
+            <button type="button"
+                class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+                onclick="closeDetailModal()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- BODY -->
+        <div class="p-6">
+
+            <!-- FOTO PROFIL -->
+            <div class="flex justify-center mb-6">
+                <img id="detail_foto"
+                    src=""
+                    alt="Foto Pegawai"
+                    class="w-40 h-40 object-cover rounded-full border-2 border-slate-200" />
+            </div>
+
+            <!-- GRID DATA -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-700">
+
+                <!-- DATA DIRI -->
+                <div class="col-span-2 mt-4">
+                    <h4 class="font-semibold text-slate-700 mb-3 pb-2 border-b">
+                        Data Diri
+                    </h4>
+                </div>
+
+                <div>
+                    <strong>No HP:</strong>
+                    <p id="detail_no_hp" class="mt-1 text-slate-800">-</p>
+                </div>
+
+                <div>
+                    <strong>Jenis Kelamin:</strong>
+                    <p id="detail_jenis_kelamin" class="mt-1 text-slate-800">-</p>
+                </div>
+
+                <div>
+                    <strong>Tempat Lahir:</strong>
+                    <p id="detail_tempat_lahir" class="mt-1 text-slate-800">-</p>
+                </div>
+
+                <div>
+                    <strong>Tanggal Lahir:</strong>
+                    <p id="detail_tgl_lahir" class="mt-1 text-slate-800">-</p>
+                </div>
+
+                <!-- ALAMAT -->
+                <div>
+                    <strong>Alamat:</strong>
+                    <p id="detail_alamat" class="mt-1 text-slate-800">-</p>
+                </div>
+
+                <!-- KARTU IDENTITAS -->
+                <div>
+                    <strong>Kartu Identitas:</strong>
+                    <p id="detail_kartu_identitas" class="mt-1"></p>
+                </div>
+
+                <!-- DATA USER -->
+                <div class="col-span-2">
+                    <h4 class="font-semibold text-slate-700 mb-3 pb-2 border-b">
+                        Data User
+                    </h4>
+                </div>
+
+                <div>
+                    <strong>Nama:</strong>
+                    <p id="detail_nama" class="mt-1 text-slate-800">-</p>
+                </div>
+
+                <div>
+                    <strong>NIP:</strong>
+                    <p id="detail_nip" class="mt-1 text-slate-800">-</p>
+                </div>
+
+                <div>
+                    <strong>Email:</strong>
+                    <p id="detail_email" class="mt-1 text-slate-800">-</p>
+                </div>
+
+                <div>
+                    <strong>Role:</strong>
+                    <p id="detail_role" class="mt-1 text-slate-800">-</p>
+                </div>
+
+                <!-- DATA KEPEGAWAIAN -->
+                <div class="col-span-2 mt-4">
+                    <h4 class="font-semibold text-slate-700 mb-3 pb-2 border-b">
+                        Data Kepegawaian
+                    </h4>
+                </div>
+
+                <div>
+                    <strong>Unit Kerja:</strong>
+                    <p id="detail_unitkerja" class="mt-1 text-slate-800">-</p>
+                </div>
+
+                <div>
+                    <strong>Golongan:</strong>
+                    <p id="detail_golongan" class="mt-1 text-slate-800">-</p>
+                </div>
+
+                <div>
+                    <strong>Jabatan:</strong>
+                    <p id="detail_jabatan" class="mt-1 text-slate-800">-</p>
+                </div>
+
+                <div>
+                    <strong>Status Pegawai:</strong>
+                    <p id="detail_status_pegawai" class="mt-1 text-slate-800">-</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end">
+            <button type="button"
+                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition"
+                onclick="closeDetailModal()">
+                Tutup
+            </button>
+        </div>
+
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
@@ -161,4 +313,132 @@
         }
     }
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const modal = document.getElementById('modalDetail');
+        const baseUrl = "{{ url('/admin/pegawai') }}";
+        const storageUrl = "{{ asset('storage') }}";
+
+        /* ================= OPEN DETAIL ================= */
+        window.openDetailModal = function(pegawaiId) {
+            if (!modal) return;
+
+            modal.classList.remove('hidden');
+            setLoading();
+
+            fetch(`${baseUrl}/${pegawaiId}/detail`)
+                .then(res => {
+                    if (!res.ok) throw new Error('Request gagal');
+                    return res.json();
+                })
+                .then(data => {
+
+                    /* ================= USER ================= */
+                    setText('detail_nama', data.user?.name);
+                    setText('detail_nip', data.user?.nip);
+                    setText('detail_email', data.user?.email);
+                    setText('detail_role', data.user?.role);
+
+                    /* ================= KEPEGAWAIAN ================= */
+                    setText('detail_unitkerja', data.unitkerja?.nama_unitkerja);
+                    setText('detail_golongan', data.golongan?.nama_golongan);
+                    setText('detail_jabatan', data.jabatan?.nama_jabatan);
+                    setText('detail_status_pegawai', data.status_pegawai);
+
+                    /* ================= DATA DIRI ================= */
+                    const diri = data.data_diri ?? {};
+
+                    setText('detail_no_hp', diri.no_hp);
+                    setText('detail_alamat', diri.alamat);
+                    setText('detail_tempat_lahir', diri.tempat_lahir);
+                    setText('detail_tgl_lahir', formatDate(diri.tgl_lahir));
+                    setText('detail_jenis_kelamin', formatGender(diri.jenis_kelamin));
+
+                    /* ================= FOTO PROFIL ================= */
+                    const fotoEl = document.getElementById('detail_foto');
+                    if (fotoEl) {
+                        fotoEl.src = diri.foto ?
+                            `${storageUrl}/${diri.foto}` :
+                            "{{ asset('images/avatar.png') }}";
+                    }
+
+                    /* ================= KARTU IDENTITAS (DOWNLOAD ONLY) ================= */
+                    const kartuWrapper = document.getElementById('detail_kartu_identitas');
+
+                    if (kartuWrapper) {
+                        if (diri.kartu_identitas) {
+                            kartuWrapper.innerHTML = `
+                            <a href="${storageUrl}/${diri.kartu_identitas}"
+                               download
+                               class="inline-flex items-center gap-2 px-3 py-2 text-sm
+                                      bg-green-800 text-white rounded-md hover:bg-green-900 transition">
+                                Download Kartu Identitas
+                            </a>
+                        `;
+                        } else {
+                            kartuWrapper.textContent = '-';
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    setLoading('Gagal memuat data');
+                });
+        };
+
+        /* ================= CLOSE MODAL ================= */
+        window.closeDetailModal = function() {
+            modal?.classList.add('hidden');
+        };
+
+        modal?.addEventListener('click', function(e) {
+            if (e.target === modal) closeDetailModal();
+        });
+
+        /* ================= HELPER ================= */
+        function setText(id, value) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value ?? '-';
+        }
+
+        function setLoading(text = 'Memuat...') {
+            const ids = [
+                'detail_nama',
+                'detail_nip',
+                'detail_email',
+                'detail_role',
+                'detail_unitkerja',
+                'detail_golongan',
+                'detail_jabatan',
+                'detail_status_pegawai',
+                'detail_no_hp',
+                'detail_alamat',
+                'detail_tempat_lahir',
+                'detail_tgl_lahir',
+                'detail_jenis_kelamin',
+                'detail_kartu_identitas'
+            ];
+
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = text;
+            });
+        }
+
+        function formatGender(val) {
+            if (val === 'L') return 'Laki-laki';
+            if (val === 'P') return 'Perempuan';
+            return '-';
+        }
+
+        function formatDate(val) {
+            if (!val) return '-';
+            return new Date(val).toLocaleDateString('id-ID');
+        }
+    });
+</script>
+
+
 @endpush

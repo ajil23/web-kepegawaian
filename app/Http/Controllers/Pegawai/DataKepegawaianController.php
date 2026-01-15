@@ -34,7 +34,6 @@ class DataKepegawaianController extends Controller
         );
     }
 
-
     public function updateKepegawaian(Request $request, Pegawai $pegawai)
     {
         $request->validate([

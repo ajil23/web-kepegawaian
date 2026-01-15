@@ -35,13 +35,20 @@ class DataDiriController extends Controller
                 $fotoPath = $request->file('foto')->store('foto_diri', 'public');
             }
 
+            $kartuIdentitasPath = null;
+            if ($request->hasFile('kartu_identitas')) {
+                $kartuIdentitasPath = $request->file('kartu_identitas')
+                    ->store('kartu_identitas', 'public');
+            }
+
             $dataDiri = DataDiri::create([
-                'no_hp'         => $request->no_hp,
-                'alamat'        => $request->alamat,
-                'tempat_lahir'  => $request->tempat_lahir,
-                'tgl_lahir'     => $request->tgl_lahir,
-                'jenis_kelamin' => $request->jenis_kelamin,
-                'foto'          => $fotoPath, // null OK
+                'no_hp'           => $request->no_hp,
+                'alamat'          => $request->alamat,
+                'tempat_lahir'    => $request->tempat_lahir,
+                'tgl_lahir'       => $request->tgl_lahir,
+                'jenis_kelamin'   => $request->jenis_kelamin,
+                'foto'            => $fotoPath,
+                'kartu_identitas' => $kartuIdentitasPath,
             ]);
 
             $pegawai->update([
@@ -68,6 +75,7 @@ class DataDiriController extends Controller
 
             $dataDiri = $pegawai->dataDiri;
 
+            // update foto
             if ($request->hasFile('foto')) {
                 if ($dataDiri->foto && Storage::disk('public')->exists($dataDiri->foto)) {
                     Storage::disk('public')->delete($dataDiri->foto);
@@ -76,11 +84,24 @@ class DataDiriController extends Controller
                 $dataDiri->foto = $request->file('foto')->store('foto_diri', 'public');
             }
 
+            // update kartu identitas
+            if ($request->hasFile('kartu_identitas')) {
+                if (
+                    $dataDiri->kartu_identitas &&
+                    Storage::disk('public')->exists($dataDiri->kartu_identitas)
+                ) {
+                    Storage::disk('public')->delete($dataDiri->kartu_identitas);
+                }
+
+                $dataDiri->kartu_identitas = $request->file('kartu_identitas')
+                    ->store('kartu_identitas', 'public');
+            }
+
             $dataDiri->update([
-                'no_hp' => $request->no_hp,
-                'alamat' => $request->alamat,
-                'tempat_lahir' => $request->tempat_lahir,
-                'tgl_lahir' => $request->tgl_lahir,
+                'no_hp'         => $request->no_hp,
+                'alamat'        => $request->alamat,
+                'tempat_lahir'  => $request->tempat_lahir,
+                'tgl_lahir'     => $request->tgl_lahir,
                 'jenis_kelamin' => $request->jenis_kelamin,
             ]);
         });
@@ -106,6 +127,7 @@ class DataDiriController extends Controller
             'tgl_lahir'     => ['required', 'date'],
             'jenis_kelamin' => ['required', 'in:L,P'],
             'foto'          => ['nullable', 'image', 'max:2048'],
+            'kartu_identitas' => ['required', 'image', 'max:2048'],
         ], [
             'no_hp.regex' => 'No HP harus berupa angka saja.',
         ]);

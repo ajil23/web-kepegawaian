@@ -169,6 +169,9 @@
                 <div><strong>Jenis Kelamin:</strong>
                     <p id="detail_jenis_kelamin" class="mt-1 text-slate-800">-</p>
                 </div>
+                <div><strong>Kartu Identitas:</strong>
+                    <p id="detail_kartu_identitas" class="mt-1"></p>
+                </div>
 
             </div>
         </div>
@@ -189,6 +192,7 @@
 
         const modal = document.getElementById('detailModal');
         const baseUrl = "{{ url('kph/pegawai') }}";
+        const storageUrl = "{{ asset('storage') }}";
 
         window.openDetailModal = function(pegawaiId) {
             if (!modal) return;
@@ -228,6 +232,22 @@
                     } else {
                         fotoEl.src = "";
                         fotoEl.alt = "Gambar kosong / bermasalah";
+                    }
+                                        const kartuWrapper = document.getElementById('detail_kartu_identitas');
+
+                    if (kartuWrapper) {
+                        if (diri.kartu_identitas) {
+                            kartuWrapper.innerHTML = `
+                            <a href="${storageUrl}/${diri.kartu_identitas}"
+                               download
+                               class="inline-flex items-center gap-2 px-3 py-2 text-sm
+                                      bg-green-800 text-white rounded-md hover:bg-green-900 transition">
+                                Download Kartu Identitas
+                            </a>
+                        `;
+                        } else {
+                            kartuWrapper.textContent = '-';
+                        }
                     }
 
                 })
