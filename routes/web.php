@@ -60,6 +60,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     Route::get('/catatan-kegiatan', [CatatanController::class, 'index'])->name('catatan_kegiatan.index'); 
     Route::patch('/catatan-kegiatan/{catatan}/status', [CatatanController::class, 'updateStatus'])->name('catatan_kegiatan.status');    
+    Route::get('/catatan-kegiatan/{id}/download-pdf', [CatatanController::class, 'downloadPdf'])->name('catatan_kegiatan.pdf');
 
     Route::get('/golongan', [GolonganController::class, 'index'])->name('index.golongan');
     Route::post('/golongan', [GolonganController::class, 'store'])->name('store.golongan');
@@ -100,6 +101,7 @@ Route::middleware(['auth', 'role:pegawai'])->prefix('pegawai')->name('pegawai.')
     Route::get('/catatan-kegiatan/{id}/edit', [CatatanKegiatanController::class, 'edit'])->name('catatan_kegiatan.edit');
     Route::put('/catatan-kegiatan/{id}', [CatatanKegiatanController::class, 'update'])->name('catatan_kegiatan.update');
     Route::delete('/catatan-kegiatan/{id}', [CatatanKegiatanController::class, 'delete'])->name('catatan_kegiatan.delete');
+    Route::get('/catatan-kegiatan/{id}/download-pdf', [CatatanKegiatanController::class, 'downloadPdf'])->name('catatan_kegiatan.pdf');
 
     Route::get('/direktori', [DirektoriController::class, 'index'])->name('direktori.index');
     Route::get('/direktori/{id}', [DirektoriController::class, 'show'])->name('direktori.show');
