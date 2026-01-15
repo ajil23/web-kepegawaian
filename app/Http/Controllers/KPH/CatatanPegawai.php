@@ -22,13 +22,13 @@ class CatatanKegiatanController extends Controller
             $q = $request->q;
             $catatanQuery->where(function ($query) use ($q) {
                 $query->where('judul', 'like', "%{$q}%")
-                      ->orWhere('deskripsi', 'like', "%{$q}%")
-                      ->orWhere('status', 'like', "%{$q}%")
-                      ->orWhereHas('pegawai.user', function ($userQuery) use ($q) {
-                          $userQuery->where('name', 'like', "%{$q}%")
-                                   ->orWhere('email', 'like', "%{$q}%")
-                                   ->orWhere('nip', 'like', "%{$q}%");
-                      });
+                    ->orWhere('deskripsi', 'like', "%{$q}%")
+                    ->orWhere('status', 'like', "%{$q}%")
+                    ->orWhereHas('pegawai.user', function ($userQuery) use ($q) {
+                        $userQuery->where('name', 'like', "%{$q}%")
+                            ->orWhere('email', 'like', "%{$q}%")
+                            ->orWhere('nip', 'like', "%{$q}%");
+                    });
             });
         }
 
@@ -38,5 +38,4 @@ class CatatanKegiatanController extends Controller
 
         return view('pages.kph.catatan_kegiatan.index', compact('catatan'));
     }
-
 }

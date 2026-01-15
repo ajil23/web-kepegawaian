@@ -19,6 +19,11 @@ class CatatanKegiatan extends Model
         'deskripsi',
         'status',
         'catatan_status',
+        'foto_kegiatan',
+    ];
+
+    protected $casts = [
+        'foto_kegiatan' => 'array',
     ];
 
     public function pegawai()

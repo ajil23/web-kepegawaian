@@ -32,6 +32,7 @@
                         <th class="pb-3 text-left">Periode</th>
                         <th class="pb-3 text-left">Judul</th>
                         <th class="pb-3 text-left">Status</th>
+                        <th class="pb-3 text-left">Foto</th>
                         <th class="pb-3 text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -76,7 +77,36 @@
                             @endif
                         </td>
 
+                        {{-- PREVIEW FOTO --}}
+                        <td class="py-4">
+                            @if (is_array($item->foto_kegiatan) && count($item->foto_kegiatan))
+                            <div class="flex items-center gap-2">
+                                @foreach (array_slice($item->foto_kegiatan, 0, 3) as $foto)
+                                <img src="{{ asset('storage/'.$foto) }}"
+                                    onclick="openFotoModal({{ json_encode($item->foto_kegiatan) }})"
+                                    class="w-10 h-10 object-cover rounded cursor-pointer border hover:opacity-80">
+                                @endforeach
+
+                                @if (count($item->foto_kegiatan) > 3)
+                                <span class="text-xs text-slate-500">
+                                    +{{ count($item->foto_kegiatan) - 3 }}
+                                </span>
+                                @endif
+                            </div>
+                            @else
+                            <span class="text-xs text-slate-400">Tidak ada</span>
+                            @endif
+                        </td>
+
                         <td class="py-4 text-right whitespace-nowrap">
+                            @if ($item->status === 'setuju')
+
+                            <a href="{{ route('pegawai.catatan_kegiatan.pdf', $item->id) }}"
+                                target="_blank"
+                                class="inline-flex items-center text-red-600 hover:text-red-800 font-medium transition">
+                                PDF
+                            </a>
+                            @endif
 
                             {{-- Jika ditolak, tampilkan tombol lihat alasan --}}
                             @if ($item->status === 'tolak')
@@ -109,6 +139,8 @@
                             @endif
 
                             @if(in_array($item->status, ['setuju']))
+                            <span class="mx-2 text-slate-300">|</span>
+
                             <small class="inline-flex items-center text-emerald-600 font-medium">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -190,6 +222,29 @@
     </div>
 </div>
 
+<!-- MODAL FOTO -->
+<div id="modalFoto"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70">
+
+    <div class="bg-white w-full max-w-5xl max-h-[90vh] rounded-xl shadow-lg flex flex-col">
+
+        <!-- HEADER -->
+        <div class="px-4 py-3 border-b flex justify-between items-center">
+            <h3 class="font-semibold text-slate-700">Foto Kegiatan</h3>
+            <button onclick="closeFotoModal()"
+                class="text-slate-600 hover:text-red-600 text-lg">
+                ✕
+            </button>
+        </div>
+
+        <!-- BODY (SCROLL AREA) -->
+        <div id="fotoContainer"
+            class="p-6 overflow-y-auto flex flex-col items-center gap-6">
+        </div>
+
+    </div>
+</div>
+
 
 @endsection
 
@@ -237,6 +292,42 @@
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
+    }
+</script>
+
+<script>
+    function openFotoModal(fotos) {
+        const container = document.getElementById('fotoContainer');
+        container.innerHTML = '';
+
+        fotos.forEach(foto => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'flex items-center justify-center';
+
+            const img = document.createElement('img');
+            img.src = `/storage/${foto}`;
+            img.className = `
+                max-w-full
+                max-h-[70vh]
+                object-contain
+                rounded-lg
+                border
+                shadow
+            `;
+
+            wrapper.appendChild(img);
+            container.appendChild(wrapper);
+        });
+
+        const modal = document.getElementById('modalFoto');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeFotoModal() {
+        const modal = document.getElementById('modalFoto');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
     }
 </script>
 
