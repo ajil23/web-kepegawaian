@@ -81,9 +81,7 @@
                     'created_at'  => $dataDiri->updated_at,
                     'type'        => 'data_diri',
                     'status'      => null,
-                    'user_info'   => $user, // Include user info for search filtering
-                    // arahkan ke halaman verifikasi / data diri
-                    'link'        => route('admin.riwayat_kepegawaian.index'),
+                    'user_info'   => $user, 
                 ]);
             }
 
