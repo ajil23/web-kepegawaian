@@ -50,7 +50,6 @@ class PegawaiController extends Controller
         return view('pages.admin.pegawai.index', compact('pegawai'));
     }
 
-
     public function create()
     {
         return view('pages.admin.pegawai.create', [
@@ -143,5 +142,18 @@ class PegawaiController extends Controller
         return redirect()
             ->route('admin.pegawai.index')
             ->with('success', 'Data pegawai berhasil dihapus.');
+    }
+
+    public function show(Pegawai $pegawai)
+    {
+        $pegawai->load([
+            'user',
+            'unitkerja',
+            'golongan',
+            'jabatan',
+            'dataDiri',
+        ]);
+
+        return response()->json($pegawai);
     }
 }

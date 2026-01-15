@@ -28,18 +28,18 @@ class DirektoriController extends Controller
             $pegawaiQuery->where(function ($query) use ($q) {
                 $query->whereHas('user', function ($userQuery) use ($q) {
                     $userQuery->where('name', 'like', "%{$q}%")
-                             ->orWhere('nip', 'like', "%{$q}%")
-                             ->orWhere('email', 'like', "%{$q}%");
+                        ->orWhere('nip', 'like', "%{$q}%")
+                        ->orWhere('email', 'like', "%{$q}%");
                 })
-                ->orWhereHas('unitkerja', function ($unitQuery) use ($q) {
-                    $unitQuery->where('nama_unitkerja', 'like', "%{$q}%");
-                })
-                ->orWhereHas('golongan', function ($golonganQuery) use ($q) {
-                    $golonganQuery->where('nama_golongan', 'like', "%{$q}%");
-                })
-                ->orWhereHas('jabatan', function ($jabatanQuery) use ($q) {
-                    $jabatanQuery->where('nama_jabatan', 'like', "%{$q}%");
-                });
+                    ->orWhereHas('unitkerja', function ($unitQuery) use ($q) {
+                        $unitQuery->where('nama_unitkerja', 'like', "%{$q}%");
+                    })
+                    ->orWhereHas('golongan', function ($golonganQuery) use ($q) {
+                        $golonganQuery->where('nama_golongan', 'like', "%{$q}%");
+                    })
+                    ->orWhereHas('jabatan', function ($jabatanQuery) use ($q) {
+                        $jabatanQuery->where('nama_jabatan', 'like', "%{$q}%");
+                    });
             });
         }
 
